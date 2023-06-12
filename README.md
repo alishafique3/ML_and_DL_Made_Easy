@@ -1,4 +1,5 @@
 # Machine_Learning_and_Deep_Learning_Notes
+I really like to make an organized notes. I will cover basic and advance topics of machine learning and deep learning in future.
 
 ## K-mean Clustering References
 1.  k-mean clustering by Andrew NG
