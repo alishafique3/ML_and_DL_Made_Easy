@@ -2,7 +2,7 @@
 I really like to make an organized note. I will cover basic and advanced topics of machine learning and deep learning in the future.
 
 ## Principal Component Analysis References
-1.  k-mean clustering by Prof. Andrew NG
+1.  Principal Component Analysis by Prof. Andrew NG
 2.	Cheatsheet unsupervised learning by Shervine Amidi: https://stanford.edu/~shervine/teaching/cs-229/cheatsheet-unsupervised-learning
 3.	Document design and Cheatsheet is adapted from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets 
 
