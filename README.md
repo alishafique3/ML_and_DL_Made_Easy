@@ -1,5 +1,5 @@
 # Machine_Learning_and_Deep_Learning_Made_Easy
-I really like to make an organized note. I will cover basic and advanced topics of machine learning and deep learning in the future.
+I really like to make an organized technical note. I will cover basic and advanced topics of machine learning and deep learning in the future.
 
 ## Principal Component Analysis References
 1.  Principal Component Analysis by Prof. Andrew NG
