@@ -1,6 +1,12 @@
 # Machine_Learning_and_Deep_Learning_Made_Easy
 I really like to make an organized technical note. I will cover basic and advanced topics of machine learning and deep learning in the future.
 
+## Regression Analysis
+1. Machine Learning by Prof. Andrew NG on Coursera
+2. StatQuest with Josh Starmer youtube Channel https://www.youtube.com/@statquest
+3. Data science Cheatsheet from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets
+4. Primers • Evaluation Metrics, ROC-Curves and Imbalanced Datasets Link: https://aman.ai/
+
 ## Support Vector Machine and Logistic Regression
 1. Machine Learning by Prof. Andrew NG on Coursera
 
