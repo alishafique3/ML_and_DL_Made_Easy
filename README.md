@@ -1,4 +1,4 @@
-# Machine_Learning_and_Deep_Learning_Made_Easy
+# Machine_Learning_and_Deep_Learning_Made_Easy_References
 I really like to make an organized technical note. I will cover basic and advanced topics of machine learning and deep learning in the future.
 
 ## Regression Analysis
