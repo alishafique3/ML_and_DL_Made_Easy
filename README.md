@@ -14,6 +14,11 @@ I really like to make an organized technical note. I will cover basic and advanc
 1. Machine Learning by Prof. Andrew NG on Coursera
 2. Data science Cheatsheet from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets
 
+## Naive Bayes Classifier
+1. Youtube Video: Naive Bayes, Clearly Explained!!! by StatQuest with Josh Starmer
+2. Youtube Video: Tutorial 48- Naive Bayes' Classifier Indepth Intuition- Machine Learning by Krish Naik
+3. Data science Cheatsheet from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets
+
 ## Ensemble Methods
 1. Ensemble Learning Methods: Bagging, Boosting and Stacking Link: https://www.analyticsvidhya.com/blog/2023/01/ensemble-learning-methods-bagging-boosting-and-stacking/ 
 2. Data science Cheatsheet from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets 
