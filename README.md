@@ -10,6 +10,12 @@ I really like to make an organized technical note. I will cover basic and advanc
 ## Support Vector Machine and Logistic Regression
 1. Machine Learning by Prof. Andrew NG on Coursera
 
+## Evaluation Metrics for Classification
+1. Machine Learning by Prof. Andrew NG on Coursera
+2. StatQuest with Josh Starmer youtube Channel https://www.youtube.com/watch?v=4jRBRDbJemM
+3. Data science Cheatsheet from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets
+4. Primers • Evaluation Metrics, ROC-Curves and Imbalanced Datasets Link: https://aman.ai/
+
 ## Bias Variance Tradeoff
 1. Machine Learning by Prof. Andrew NG on Coursera
 2. Data science Cheatsheet from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets
