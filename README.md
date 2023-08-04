@@ -1,6 +1,11 @@
 # Machine_Learning_and_Deep_Learning_Made_Easy_References
 I really like to make an organized technical notes. I will cover basic and advanced topics of machine learning and deep learning in the future.
 
+## Convolutional Neural Network - Part 1
+1. Deep Learning (Convolutional Neural Network) by Prof. Andrew NG on Coursera
+2. Convolutional Neural Networks cheatsheet by Afshine Amidi and Shervine Amidi Link: https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-convolutional-neural-networks#filter
+3. Data science Cheatsheet from Aqeel Anwar's cheatsheet Link: https://sites.google.com/view/datascience-cheat-sheets
+
 ## Regression Analysis
 1. Machine Learning by Prof. Andrew NG on Coursera
 2. StatQuest with Josh Starmer youtube Channel https://www.youtube.com/@statquest
