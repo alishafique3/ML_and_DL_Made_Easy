@@ -1,5 +1,5 @@
 # Machine_Learning_and_Deep_Learning_Made_Easy_References
-I really like to make an organized technical notes. I will cover basic and advanced topics of machine learning and deep learning in the future.
+I love making technical notes where concepts are organized, simple to understand and presented like a story. I will cover basic and advanced topics of machine learning, deep learning, and data science topics in the future.
 
 ## Convolutional Neural Network - Part 1
 1. Deep Learning (Convolutional Neural Network) by Prof. Andrew NG on Coursera
