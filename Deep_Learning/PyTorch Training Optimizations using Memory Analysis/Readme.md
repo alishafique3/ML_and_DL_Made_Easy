@@ -4,6 +4,16 @@ Training deep learning models, especially large ones, can be a costly expenditur
 
 The focus in this post will be on training in PyTorch on GPU. More specifically, we will focus on the PyTorch’s built-in performance analyzer, PyTorch Profiler, and on one of the ways to view its results, the PyTorch Profiler TensorBoard plugin.
 
+## Result
+Android Device use for this project is Xiaomi Mi A2 with octacore processor and Adreno512 GPU. During benchmarking, 4 CPU threads are used. Runtime memory and model size are in MB while inference time is an average time in microseconds. 
+| Optimization Technique        | Size           | InferTime_CPU  | Runtime_Memory_CPU  | InferTime_GPU  | Runtime_Memory_GPU  | InferTime_NNAPI  | Runtime_Memory_NNAPI  |
+:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+| Base_Model No Optimization      | 8.5 | 6719.84 | 11.4      | 5175.1 | 49.4 | 9382      | 11.46 |
+| Dynamic Range Quantized      | 2.14 | 8375 | 5.7      | 5075 | 43.34 | 8307      | 5.75 |
+| Float16 Quantized      | 4.26 | 7563 | 15.69      | 5173 | 45.34 | 6553      | 16.05 |
+| Clustered and Quantized      | 2.14 | 8897 | 5.98      | 5214 | 43.35 | 8491      | 5.9 |
+| Pruned and Quantized      | 2.14 | 8032 | 5.88      | 5057.1 | 43.32 | 7483      | 6.02 |
+
 ## Baseline Model
 For a while, I have been intrigued by one portion in particular of the TensorBoard-plugin tutorial. The tutorial introduces a classification model (based on the Resnet architecture) that is trained on the popular Cifar10 dataset. It proceeds to demonstrate how PyTorch Profiler and the TensorBoard plugin can be used to identify and fix a bottleneck in the data loader. 
 
@@ -18,5 +28,12 @@ For a while, I have been intrigued by one portion in particular of the TensorBoa
 ## Optimization #4: Multi-process Data Loading
 
 ## Optimization #5: Memory Pinning
+
+## Conclusion
+In this project, different optimized models have been compared on android device. Dynamic quantization plays remarkably well among these optimized models. This project can be extended on different datasets, models and hardware to see the performance of optimization techniques.
+
+## References
+1.	Pyimagesearch Website: Fire and smoke detection with Keras and deep learning link: https://www.pyimagesearch.com/2019/11/18/fire-and-smoke-detection-with-keras-and-deep-learning/
+2.	Youtube Website: tinyML Talks: A Practical guide to neural network quantization link: https://www.youtube.com/watch?v=KASuxB3XoYQ 
 
 
