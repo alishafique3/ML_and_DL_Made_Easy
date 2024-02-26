@@ -9,4 +9,14 @@ For a while, I have been intrigued by one portion in particular of the TensorBoa
 
 ![1_baseline_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3c871ec6-9aac-45c3-a306-7e43f5f65fe7)
 
+## Optimization #1: Automatic Mixed Precision
+
+## Optimization #2: Increase Batch Size
+
+## Optimization #3: Reduce Host to Device Copy
+
+## Optimization #4: Multi-process Data Loading
+
+## Optimization #5: Memory Pinning
+
 
