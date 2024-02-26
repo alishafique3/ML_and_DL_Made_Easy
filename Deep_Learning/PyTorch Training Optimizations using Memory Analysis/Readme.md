@@ -6,14 +6,14 @@ The focus in this post will be on training in PyTorch on GPU. More specifically,
 
 ## Result
 Android Device use for this project is Xiaomi Mi A2 with octacore processor and Adreno512 GPU. During benchmarking, 4 CPU threads are used. Runtime memory and model size are in MB while inference time is an average time in microseconds. 
-| Optimization Technique        | Size           | InferTime_CPU  | Runtime_Memory_CPU  | InferTime_GPU  | Runtime_Memory_GPU  | InferTime_NNAPI  | Runtime_Memory_NNAPI  |
-:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
-| Base_Model      | 8.5 | 6719.84 | 11.4      | 5175.1 | 49.4 | 9382      | 11.46 |
-| Automatic Mixed Precision      | 2.14 | 8375 | 5.7      | 5075 | 43.34 | 8307      | 5.75 |
-| Increase Batch Size      | 4.26 | 7563 | 15.69      | 5173 | 45.34 | 6553      | 16.05 |
-| Reduce H2D Copy      | 2.14 | 8897 | 5.98      | 5214 | 43.35 | 8491      | 5.9 |
-| Multi-process Data Loading     | 2.14 | 8032 | 5.88      | 5057.1 | 43.32 | 7483      | 6.02 |
-| Memory Pinning     | 2.14 | 8032 | 5.88      | 5057.1 | 43.32 | 7483      | 6.02 |
+| Optimization Technique        | Batch Size           | GPU Memory (MB)  | Avg. Step Time (ms)  | Samples per sec  | Optimization (rel. to base)  | 
+:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+| Base_Model      | 8.5 | 6719.84 | 11.4      | 5175.1 | 49.4 |
+| Automatic Mixed Precision      | 2.14 | 8375 | 5.7      | 5075 | 43.34 |
+| Increase Batch Size      | 4.26 | 7563 | 15.69      | 5173 | 45.34 |
+| Reduce H2D Copy      | 2.14 | 8897 | 5.98      | 5214 | 43.35 |
+| Multi-process Data Loading     | 2.14 | 8032 | 5.88      | 5057.1 | 43.32 |
+| Memory Pinning     | 2.14 | 8032 | 5.88      | 5057.1 | 43.32 |
 
 ## Baseline Model
 For a while, I have been intrigued by one portion in particular of the TensorBoard-plugin tutorial. The tutorial introduces a classification model (based on the Resnet architecture) that is trained on the popular Cifar10 dataset. It proceeds to demonstrate how PyTorch Profiler and the TensorBoard plugin can be used to identify and fix a bottleneck in the data loader. 
