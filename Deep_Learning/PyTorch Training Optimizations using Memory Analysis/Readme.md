@@ -60,10 +60,14 @@ Caution: Lowering the precision of portions of your model could have a meaningfu
 ![2_AMP_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/7cfdad00-7d89-4203-b2b3-fe00d33bd2a8)
 
 
-
-
-
 ## Optimization #2: Increase Batch Size
+The chart shows that out of 16 GB of GPU memory, we are peaking at less than 1 GB of utilization. This is an extreme example of resource under-utilization that often (though not always) indicates an opportunity to boost performance. One way to control the memory utilization is to increase the batch size. In the image below we display the performance results when we increase the batch size to 512 (and the memory utilization to 11.3 GB).
+![3_BatchSize_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/7a085e4a-e81e-4562-a976-2c1133675383)
+![3_BatchSize_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/d9b6cdab-d991-4b59-8924-1271e7173242)
+
+Although the GPU utilization measure did not change much, our training speed has increased considerably, from 1200 samples per second (46 milliseconds for batch size 32) to 1584 samples per second (324 milliseconds for batch size 512).
+
+Caution: Contrary to our previous optimizations, increasing the batch size could have an impact on the behavior of your training application. Different models exhibit different levels of sensitivity to a change in batch size. 
 
 ## Optimization #3: Reduce Host to Device Copy
 
