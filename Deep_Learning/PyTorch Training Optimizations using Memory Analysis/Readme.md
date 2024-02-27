@@ -5,8 +5,7 @@ Training deep learning models, especially large ones, can be a costly expenditur
 The focus in this post will be on training in PyTorch on GPU. More specifically, we will focus on the PyTorch’s built-in performance analyzer, PyTorch Profiler, and on one of the ways to view its results, the PyTorch Profiler TensorBoard plugin.
 
 ## Usage:
-The code is built using NVIDIA container image of Pytorch, release 23.10, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch).\
-The code is built using following libraries:
+The code is built using NVIDIA container image of Pytorch, release 23.10, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch). The code is built using following libraries:
 
 - Ubuntu 22.04 including Python 3.10
 - NVIDIA cuDNN 8.9.5
