@@ -1,11 +1,11 @@
 # PyTorch Training Optimizations using Memory Analysis
 
-Training deep learning models, especially large ones, can be a costly expenditure. One of the main methods we have at our disposal for managing these costs is performance optimization. Performance optimization is an iterative process in which we consistently search for opportunities to increase the performance of our application and then take advantage of those opportunities. In previous posts (e.g., here) we have stressed the importance of having appropriate tools for conducting this analysis. The tools of choice will likely depend on a number of factors including the type of training accelerator (e.g., GPU, HPU, or other) and the training framework.
+Training optimization techniques are critical in machine learning because they enhance efficiency, speed up convergence, ensure stability, improve generalization, and enable scalability. These techniques are essential for developing effective models that perform well on various tasks and datasets while making efficient use of computational resources.
 
-The focus in this post will be on training in PyTorch on GPU. More specifically, we will focus on the PyTorch’s built-in performance analyzer, PyTorch Profiler, and on one of the ways to view its results, the PyTorch Profiler TensorBoard plugin.
+The focus of this tutorial will be on the optimization of the training stage on a single GPU using PyTorch framework. We will use PyTorch’s built-in performance analyzer, PyTorch Profiler, and the PyTorch Profiler TensorBoard plugin to analyze the performance of the training stage in terms of memory and training time.
 
 ## Usage:
-The code is built using NVIDIA container image of Pytorch, release 23.10, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch). The code is built using following libraries:
+The code is built using the NVIDIA container image of Pytorch, release 23.10, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch). The code is built using the following libraries:
 
 - Ubuntu 22.04 including Python 3.10
 - NVIDIA cuDNN 8.9.5
