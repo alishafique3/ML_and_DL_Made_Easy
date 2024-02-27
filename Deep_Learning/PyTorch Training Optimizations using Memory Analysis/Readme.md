@@ -48,14 +48,14 @@ The modification to the training step required to enable AMP is demonstrated in 
 
 ```python
 def train(data):
-    inputs, labels = data[0].to(device=device, non_blocking=True), \
-                     data[1].to(device=device, non_blocking=True)
-    inputs = (inputs.to(torch.float32) / 255. - 0.5) / 0.5
+    inputs, labels = data[0].to(device=device), data[1].to(device=device)
     with torch.autocast(device_type='cuda', dtype=torch.float16):
         outputs = model(inputs)
-        loss = criterion(outputs, labels)
-    # Note - torch.cuda.amp.GradScaler() may be required  
-    optimizer.zero_grad(set_to_none=True)
+        loss = criterion(outputs, labels) 
+    #outputs = model(inputs)
+    #loss = criterion(outputs, labels)
+    # Note - torch.cuda.amp.GradScaler() may be required
+    optimizer.zero_grad()
     loss.backward()
     optimizer.step()
 ```
@@ -74,8 +74,7 @@ Caution: Lowering the precision of portions of your model could have a meaningfu
 ## Optimization #2: Increase Batch Size
 The chart shows that out of 16 GB of GPU memory, we are peaking at less than 1 GB of utilization. This is an extreme example of resource under-utilization that often (though not always) indicates an opportunity to boost performance. One way to control the memory utilization is to increase the batch size. In the image below we display the performance results when we increase the batch size to 512 (and the memory utilization to 11.3 GB).
 ```python
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, 
-                                           shuffle=True)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True)
 ```
 Although the GPU utilization measure did not change much, our training speed has increased considerably, from 1200 samples per second (46 milliseconds for batch size 32) to 1584 samples per second (324 milliseconds for batch size 512).
 ![3_BatchSize_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/7a085e4a-e81e-4562-a976-2c1133675383)
@@ -86,30 +85,22 @@ Caution: Contrary to our previous optimizations, increasing the batch size could
 ## Optimization #3: Reduce Host to Device Copy
 You probably noticed the big red eyesore representing the host-to-device data copy in the pie chart from our previous results. The most direct way of trying to address this kind of bottleneck is to see if we can reduce the amount of data in each batch. Notice that in the case of our image input, we convert the data type from an 8-bit unsigned integer to a 32-bit float and apply normalization before performing the data copy. In the code block below, we propose a change to the input data flow in which we delay the data type conversion and normalization until the data is on the GPU:
 ```python
-# maintain the image input as an 8-bit uint8 tensor
 transform = T.Compose(
     [T.Resize(224),
-     T.PILToTensor()
-     ])
-train_set = FakeCIFAR(transform=transform)
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=1024, 
-                                           shuffle=True, num_workers=8,
-                                           pin_memory=True)
-
-device = torch.device("cuda:0")
-model = torchvision.models.resnet18(weights='IMAGENET1K_V1').cuda(device)
-criterion = torch.nn.CrossEntropyLoss().cuda(device)
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-model.train()
-
-# train step
+     T.ToTensor()#,
+     ]) #T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+```
+Train function will be updated as
+```python
 def train(data):
-    inputs, labels = data[0].to(device=device, non_blocking=True), \
-                     data[1].to(device=device, non_blocking=True)
-    # convert to float32 and normalize
+    inputs, labels = data[0].to(device=device), data[1].to(device=device)
     inputs = (inputs.to(torch.float32) / 255. - 0.5) / 0.5
-    outputs = model(inputs)
-    loss = criterion(outputs, labels)
+    with torch.autocast(device_type='cuda', dtype=torch.float16):
+        outputs = model(inputs)
+        loss = criterion(outputs, labels) 
+    #outputs = model(inputs)
+    #loss = criterion(outputs, labels)
+    # Note - torch.cuda.amp.GradScaler() may be required
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
@@ -122,8 +113,7 @@ We now stand at a new high of 97.51%(!!) GPU utilization and a training speed of
 ## Optimization #4: Multi-process Data Loading
 Let’s start by applying multi process data loading as described in the tutorial. Being that the Amazon EC2 p3.2xlarge instance has 8 vCPUs, we set the number of DataLoader workers to 8 for maximum performance:
 ```python
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, 
-                               shuffle=True, num_workers=8)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True, num_workers=2)
 ```
 The results of this optimization are displayed below:
 ![5_multiprocessor_overview_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/23d0a466-7512-40db-ae01-fa4efa97407f)
@@ -139,8 +129,7 @@ To address this, we will apply another PyTorch-recommended optimization for stre
 
 This memory-pinning optimization requires changes to two lines of code. First, we set the pin_memory flag of the DataLoader to True.
 ```python
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, 
-                          shuffle=True, num_workers=8, pin_memory=True)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True, num_workers=2, pin_memory=True)
 ```
 Then we modify the host-to-device memory transfer (in the train function) to be non-blocking:
 ```python
