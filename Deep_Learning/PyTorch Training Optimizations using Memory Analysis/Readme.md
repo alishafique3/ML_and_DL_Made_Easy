@@ -73,6 +73,39 @@ Although the GPU utilization measure did not change much, our training speed has
 Caution: Contrary to our previous optimizations, increasing the batch size could have an impact on the behavior of your training application. Different models exhibit different levels of sensitivity to a change in batch size. 
 
 ## Optimization #3: Reduce Host to Device Copy
+You probably noticed the big red eyesore representing the host-to-device data copy in the pie chart from our previous results. The most direct way of trying to address this kind of bottleneck is to see if we can reduce the amount of data in each batch. Notice that in the case of our image input, we convert the data type from an 8-bit unsigned integer to a 32-bit float and apply normalization before performing the data copy. In the code block below, we propose a change to the input data flow in which we delay the data type conversion and normalization until the data is on the GPU:
+```python
+# maintain the image input as an 8-bit uint8 tensor
+transform = T.Compose(
+    [T.Resize(224),
+     T.PILToTensor()
+     ])
+train_set = FakeCIFAR(transform=transform)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=1024, 
+                                           shuffle=True, num_workers=8,
+                                           pin_memory=True)
+
+device = torch.device("cuda:0")
+model = torchvision.models.resnet18(weights='IMAGENET1K_V1').cuda(device)
+criterion = torch.nn.CrossEntropyLoss().cuda(device)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+model.train()
+
+# train step
+def train(data):
+    inputs, labels = data[0].to(device=device, non_blocking=True), \
+                     data[1].to(device=device, non_blocking=True)
+    # convert to float32 and normalize
+    inputs = (inputs.to(torch.float32) / 255. - 0.5) / 0.5
+    outputs = model(inputs)
+    loss = criterion(outputs, labels)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+```
+As a result of this change the amount of data being copied from the CPU to the GPU is reduced by 4x and the red eyesore virtually disappears:
+![4_H2D_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/6559dade-d1f9-4804-8f5f-72d0cfe670dc)
+We now stand at a new high of 97.51%(!!) GPU utilization and a training speed of 1670 samples per second! Let’s see what else we can do.
 
 ## Optimization #4: Multi-process Data Loading
 
