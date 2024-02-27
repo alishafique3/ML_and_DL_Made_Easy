@@ -24,6 +24,8 @@ Where:
 - xx.xx is the container version that is 23.10
 
 ## Baseline Model
+Pytorch example "PyTorch Profiler With TensorBoard" is used for base code which is available [Link](https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html) accessed on February 13, 2024.
+
 For a while, I have been intrigued by one portion in particular of the TensorBoard-plugin tutorial. The tutorial introduces a classification model (based on the Resnet architecture) that is trained on the popular Cifar10 dataset. It proceeds to demonstrate how PyTorch Profiler and the TensorBoard plugin can be used to identify and fix a bottleneck in the data loader. 
 
 ![1_baseline_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3c871ec6-9aac-45c3-a306-7e43f5f65fe7)
