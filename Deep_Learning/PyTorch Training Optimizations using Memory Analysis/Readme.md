@@ -8,12 +8,12 @@ The focus in this post will be on training in PyTorch on GPU. More specifically,
 Android Device use for this project is Xiaomi Mi A2 with octacore processor and Adreno512 GPU. During benchmarking, 4 CPU threads are used. Runtime memory and model size are in MB while inference time is an average time in microseconds. 
 | Optimization Technique        | Batch Size           | GPU Memory (GB)  | Avg. Step Time (ms)  | Samples per sec  | Optimization (rel. to base)  | 
 :-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
-| Base_Model      | 32 | 2.51 | 117.1      | 5175.1 | 49.4 |
-| Automatic Mixed Precision      | 32 | 1.32 | 81.1      | 5075 | 43.34 |
-| Increase Batch Size      | 128 | 4.94 | 232.1      | 5173 | 45.34 |
-| Reduce H2D Copy      | 128 | 4.94 | 202.6      | 5214 | 43.35 |
-| Multi-process Data Loading     | 128 | 4.94 | 145.8      | 5057.1 | 43.32 |
-| Memory Pinning     | 128 | 4.94 | 92.6      | 5057.1 | 43.32 |
+| Base_Model      | 32 | 2.51 | 117.1      | 273.5 | 100% |
+| Automatic Mixed Precision      | 32 | 1.32 | 81.1      | 395.1 | 144% |
+| Increase Batch Size      | 128 | 4.95 | 232.1      | 551.5 | 201% |
+| Reduce H2D Copy      | 128 | 4.95 | 202.6      | 631.63 | 230% |
+| Multi-process Data Loading     | 128 | 4.95 | 145.8      | 877.84 | 320% |
+| Memory Pinning     | 128 | 4.95 | 92.6      | 1381.6 | 505% |
 
 ## Baseline Model
 For a while, I have been intrigued by one portion in particular of the TensorBoard-plugin tutorial. The tutorial introduces a classification model (based on the Resnet architecture) that is trained on the popular Cifar10 dataset. It proceeds to demonstrate how PyTorch Profiler and the TensorBoard plugin can be used to identify and fix a bottleneck in the data loader. 
