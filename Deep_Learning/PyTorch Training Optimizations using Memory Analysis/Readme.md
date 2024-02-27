@@ -109,6 +109,17 @@ As a result of this change the amount of data being copied from the CPU to the G
 We now stand at a new high of 97.51%(!!) GPU utilization and a training speed of 1670 samples per second! Let’s see what else we can do.
 
 ## Optimization #4: Multi-process Data Loading
+Let’s start by applying multi process data loading as described in the tutorial. Being that the Amazon EC2 p3.2xlarge instance has 8 vCPUs, we set the number of DataLoader workers to 8 for maximum performance:
+```python
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, 
+                               shuffle=True, num_workers=8)
+```
+The results of this optimization are displayed below:
+![5_multiprocessor_overview_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/23d0a466-7512-40db-ae01-fa4efa97407f)
+
+The change to a single line of code increased the GPU utilization by more than 200% (31.65% from to 72.81%), and more than halved our training step time, (from 80 milliseconds down to 37).
+
+This is where the optimization process in the tutorial comes to end. Although our GPU utilization (72.81%) is quite a bit higher than the results in the tutorial (40.46%), I have no doubt that, like us, you find these results to still be quite unsatisfactory.
 
 ## Optimization #5: Memory Pinning
 
