@@ -22,6 +22,38 @@ For a while, I have been intrigued by one portion in particular of the TensorBoa
 
 ## Optimization #1: Automatic Mixed Precision
 The GPU Kernel View displays the amount of time that the GPU kernels were active and can be a helpful resource for improving GPU utilization:
+![1_baseline_kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/ca077b53-ae67-46ec-a910-e6dd536e16cc)
+One of the most glaring details in this report is the lack of use of the GPU Tensor Cores. Available on relatively newer GPU architectures, Tensor Cores are dedicated processing units for matrix multiplication that can boost AI application performance significantly. Their lack of use may represent a major opportunity for optimization.
+
+Being that Tensor Cores are specifically designed for mixed-precision computing, one straight-forward way to increase their utilization is to modify our model to use Automatic Mixed Precision (AMP). In AMP mode portions of the model are automatically cast to lower-precision 16-bit floats and run on the GPU TensorCores.
+
+Importantly, note that a full implementation of AMP may require gradient scaling which we do not include in our demonstration. Be sure to see the documentation on mixed precision training before adapting it.
+
+The modification to the training step required to enable AMP is demonstrated in the code block below.
+
+```python
+def train(data):
+    inputs, labels = data[0].to(device=device, non_blocking=True), \
+                     data[1].to(device=device, non_blocking=True)
+    inputs = (inputs.to(torch.float32) / 255. - 0.5) / 0.5
+    with torch.autocast(device_type='cuda', dtype=torch.float16):
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+    # Note - torch.cuda.amp.GradScaler() may be required  
+    optimizer.zero_grad(set_to_none=True)
+    loss.backward()
+    optimizer.step()
+```
+The impact to the Tensor Core utilization is displayed in the image below. Although it continues to indicate opportunity for further improvement, with just one line of code the utilization jumped from 0% to 26.3%.
+![2_AMP_Kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/61da91ea-2c6c-4627-8436-e335973c67de)
+In addition to increasing Tensor Core utilization, using AMP lowers the GPU memory utilization freeing up more space to increase the batch size. Although the GPU utilization has slightly decreased, our primary throughput metric has further increased by nearly 50%, from 1670 samples per second to 2477. We are on a roll!
+
+Caution: Lowering the precision of portions of your model could have a meaningful effect on its convergence. As in the case of increasing the batch size (see above) the impact of using mixed precision will vary per model. In some cases, AMP will work with little to no effort. Other times you might need to work a bit harder to tune the autoscaler. Still other times you might need to set the precision types of different portions of the model explicitly (i.e., manual mixed precision).
+
+![2_AMP_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/5b53abad-6d16-441a-b382-7fc5efb4a9f0)
+
+
+
 
 
 ## Optimization #2: Increase Batch Size
