@@ -4,17 +4,6 @@ Training deep learning models, especially large ones, can be a costly expenditur
 
 The focus in this post will be on training in PyTorch on GPU. More specifically, we will focus on the PyTorch’s built-in performance analyzer, PyTorch Profiler, and on one of the ways to view its results, the PyTorch Profiler TensorBoard plugin.
 
-## Result
-Android Device use for this project is Xiaomi Mi A2 with octacore processor and Adreno512 GPU. During benchmarking, 4 CPU threads are used. Runtime memory and model size are in MB while inference time is an average time in microseconds. 
-| Optimization Technique        | Batch Size           | GPU Memory (GB)  | Avg. Step Time (ms)  | Samples per sec  | Optimization (rel. to base)  | 
-:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
-| Base_Model      | 32 | 2.51 | 117.1      | 273.5 | 100% |
-| Automatic Mixed Precision      | 32 | 1.32 | 81.1      | 395.1 | 144% |
-| Increase Batch Size      | 128 | 4.95 | 232.1      | 551.5 | 201% |
-| Reduce H2D Copy      | 128 | 4.95 | 202.6      | 631.63 | 230% |
-| Multi-process Data Loading     | 128 | 4.95 | 145.8      | 877.84 | 320% |
-| Memory Pinning     | 128 | 4.95 | 92.6      | 1381.6 | 505% |
-
 ## Baseline Model
 For a while, I have been intrigued by one portion in particular of the TensorBoard-plugin tutorial. The tutorial introduces a classification model (based on the Resnet architecture) that is trained on the popular Cifar10 dataset. It proceeds to demonstrate how PyTorch Profiler and the TensorBoard plugin can be used to identify and fix a bottleneck in the data loader. 
 
@@ -140,6 +129,18 @@ The results of the memory pinning optimization are displayed below:
 ![6_pin_memory_overview_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/88e110f0-0c87-4265-8e47-10d7a0b38259)
 
 Our GPU utilization now stands at a respectable 92.37% and our step time has further decreased. But we can still do better. Note that despite this optimization, the performance report continues to indicate that we are spending a lot of time copying the data into the GPU. We will come back to this in step 4 below.
+
+## Result
+Android Device use for this project is Xiaomi Mi A2 with octacore processor and Adreno512 GPU. During benchmarking, 4 CPU threads are used. Runtime memory and model size are in MB while inference time is an average time in microseconds. 
+| Optimization Technique        | Batch Size           | GPU Memory (GB)  | Avg. Step Time (ms)  | Samples per sec  | Optimization (rel. to base)  | 
+:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+| Base_Model      | 32 | 2.51 | 117.1      | 273.5 | 100% |
+| Automatic Mixed Precision      | 32 | 1.32 | 81.1      | 395.1 | 144% |
+| Increase Batch Size      | 128 | 4.95 | 232.1      | 551.5 | 201% |
+| Reduce H2D Copy      | 128 | 4.95 | 202.6      | 631.63 | 230% |
+| Multi-process Data Loading     | 128 | 4.95 | 145.8      | 877.84 | 320% |
+| Memory Pinning     | 128 | 4.95 | 92.6      | 1381.6 | 505% |
+
 ## Conclusion
 In this project, different optimized models have been compared on android device. Dynamic quantization plays remarkably well among these optimized models. This project can be extended on different datasets, models and hardware to see the performance of optimization techniques.
 
