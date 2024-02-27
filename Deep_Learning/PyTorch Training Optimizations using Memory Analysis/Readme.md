@@ -22,7 +22,8 @@ For a while, I have been intrigued by one portion in particular of the TensorBoa
 
 ## Optimization #1: Automatic Mixed Precision
 The GPU Kernel View displays the amount of time that the GPU kernels were active and can be a helpful resource for improving GPU utilization:
-![1_baseline_kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/ca077b53-ae67-46ec-a910-e6dd536e16cc)
+![1_baseline_kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/074249c0-cd1d-4002-8a9f-6a5522bcc151)
+
 One of the most glaring details in this report is the lack of use of the GPU Tensor Cores. Available on relatively newer GPU architectures, Tensor Cores are dedicated processing units for matrix multiplication that can boost AI application performance significantly. Their lack of use may represent a major opportunity for optimization.
 
 Being that Tensor Cores are specifically designed for mixed-precision computing, one straight-forward way to increase their utilization is to modify our model to use Automatic Mixed Precision (AMP). In AMP mode portions of the model are automatically cast to lower-precision 16-bit floats and run on the GPU TensorCores.
@@ -45,7 +46,8 @@ def train(data):
     optimizer.step()
 ```
 The impact to the Tensor Core utilization is displayed in the image below. Although it continues to indicate opportunity for further improvement, with just one line of code the utilization jumped from 0% to 26.3%.
-![2_AMP_Kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/61da91ea-2c6c-4627-8436-e335973c67de)
+![2_AMP_Kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/183527fb-ec76-4067-ba18-8487113cf68d)
+
 In addition to increasing Tensor Core utilization, using AMP lowers the GPU memory utilization freeing up more space to increase the batch size. Although the GPU utilization has slightly decreased, our primary throughput metric has further increased by nearly 50%, from 1670 samples per second to 2477. We are on a roll!
 
 Caution: Lowering the precision of portions of your model could have a meaningful effect on its convergence. As in the case of increasing the batch size (see above) the impact of using mixed precision will vary per model. In some cases, AMP will work with little to no effort. Other times you might need to work a bit harder to tune the autoscaler. Still other times you might need to set the precision types of different portions of the model explicitly (i.e., manual mixed precision).
