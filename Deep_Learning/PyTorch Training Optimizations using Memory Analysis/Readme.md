@@ -5,26 +5,23 @@ Training deep learning models, especially large ones, can be a costly expenditur
 The focus in this post will be on training in PyTorch on GPU. More specifically, we will focus on the PyTorch’s built-in performance analyzer, PyTorch Profiler, and on one of the ways to view its results, the PyTorch Profiler TensorBoard plugin.
 
 ## Usage:
-The code is built using NVIDIA container image of TensorFlow, release 22.03, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorflow).\
+The code is built using NVIDIA container image of Pytorch, release 23.10, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch).\
 The code is built using following libraries:
 
-- Python 3.8
-- NVIDIA cuDNN 8.3.3.40
-- TensorFlow 2.8.0
-- NVIDIA TensorRT 8.2.3
-- TensorFlow-TensorRT (TF-TRT)
+- Ubuntu 22.04 including Python 3.10
+- NVIDIA cuDNN 8.9.5
+- PyTorch 23.10
   
 For Docker 19.03 or later, a typical command to launch the container is:
 ```
-docker run --gpus all -it --rm nvcr.io/nvidia/tensorflow:xx.xx-tfx-py3
+docker run --gpus all -it --rm nvcr.io/nvidia/pytorch:xx.xx-py3
 ```
 For Docker 19.02 or earlier, a typical command to launch the container is:
 ```
-nvidia-docker run -it --rm nvcr.io/nvidia/tensorflow:xx.xx-tfx-py3
+nvidia-docker run -it --rm -v nvcr.io/nvidia/pytorch:xx.xx-py3
 ```
 Where:
-- xx.xx is the container version that is 22.03
-- tfx is the version of TensorFlow that is tf2.
+- xx.xx is the container version that is 23.10
 
 ## Baseline Model
 For a while, I have been intrigued by one portion in particular of the TensorBoard-plugin tutorial. The tutorial introduces a classification model (based on the Resnet architecture) that is trained on the popular Cifar10 dataset. It proceeds to demonstrate how PyTorch Profiler and the TensorBoard plugin can be used to identify and fix a bottleneck in the data loader. 
