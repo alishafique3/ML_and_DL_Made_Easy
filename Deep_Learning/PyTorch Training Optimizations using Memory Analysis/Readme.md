@@ -20,6 +20,9 @@ For a while, I have been intrigued by one portion in particular of the TensorBoa
 
 ![1_baseline_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3c871ec6-9aac-45c3-a306-7e43f5f65fe7)
 
+![1_baseline_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3e1a7661-e364-4987-8b4a-1953b3081aa1)
+
+
 ## Optimization #1: Automatic Mixed Precision
 The GPU Kernel View displays the amount of time that the GPU kernels were active and can be a helpful resource for improving GPU utilization:
 ![1_baseline_kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/074249c0-cd1d-4002-8a9f-6a5522bcc151)
@@ -54,6 +57,7 @@ Caution: Lowering the precision of portions of your model could have a meaningfu
 
 ![2_AMP_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/5b53abad-6d16-441a-b382-7fc5efb4a9f0)
 
+![2_AMP_memory](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/c2e5051a-76b3-4740-99e4-dacd3853bd77)
 
 
 
