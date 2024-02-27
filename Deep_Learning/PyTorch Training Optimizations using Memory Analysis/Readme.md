@@ -57,7 +57,8 @@ Caution: Lowering the precision of portions of your model could have a meaningfu
 
 ![2_AMP_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/5b53abad-6d16-441a-b382-7fc5efb4a9f0)
 
-![2_AMP_memory](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/c2e5051a-76b3-4740-99e4-dacd3853bd77)
+![2_AMP_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/7cfdad00-7d89-4203-b2b3-fe00d33bd2a8)
+
 
 
 
