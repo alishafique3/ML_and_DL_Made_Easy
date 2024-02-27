@@ -1,1 +1,8 @@
-https://ksuemailprod-my.sharepoint.com/:f:/g/personal/alishafique_ksu_edu/EhslGsYYZGtMtcpg3Um2ZQYBv82rovv5Iz5rXH2I7kPHyA?e=XneIeu
+This link contains Pytorch profiler files that can be run on PyTorch Profiler TensorBoard
+
+Steps:
+1. Download and move files to ./log/mobilenet_v2 directory
+2. Install pyTorch Profiler TensorBoard using terminal command pip install torch_tb_profiler
+3. Run profiler using terminal command tensorboard --logdir=./log
+
+LINK: https://ksuemailprod-my.sharepoint.com/:f:/g/personal/alishafique_ksu_edu/EhslGsYYZGtMtcpg3Um2ZQYBv82rovv5Iz5rXH2I7kPHyA?e=XneIeu
