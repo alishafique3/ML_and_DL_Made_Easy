@@ -104,7 +104,8 @@ def train(data):
     optimizer.step()
 ```
 As a result of this change the amount of data being copied from the CPU to the GPU is reduced by 4x and the red eyesore virtually disappears:
-![4_H2D_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/6559dade-d1f9-4804-8f5f-72d0cfe670dc)
+![4_H2D_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3a7158de-859f-4915-bd6d-0e77f98d856a)
+
 We now stand at a new high of 97.51%(!!) GPU utilization and a training speed of 1670 samples per second! Let’s see what else we can do.
 
 ## Optimization #4: Multi-process Data Loading
