@@ -23,7 +23,7 @@ Where:
 - xx.xx is the container version that is 23.10
 
 ## Baseline Model
-Pytorch example "PyTorch Profiler With TensorBoard" is used as base code which is available [Link](https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html) accessed on February 13, 2024.
+Pytorch example "PyTorch Profiler With TensorBoard" is used as base code which is available [Link](https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html) accessed on February 2, 2024.
 
 The tutorial has used a classification model (based on the Mobilenet_V2 architecture) that is trained on the popular CIFAR10 dataset. PyTorch Profiler and the PyTorch TensorBoard plugin are used to identify a bottleneck in the training step. 
 
