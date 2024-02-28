@@ -68,7 +68,7 @@ def train(data):
 The impact on the Tensor Core utilization is displayed in the image below. With just a few lines of code, the utilization jumped from 0% to 19%.
 ![2_AMP_Kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/183527fb-ec76-4067-ba18-8487113cf68d)
 
-In addition to increasing Tensor Core utilization, AMP has also lowered the GPU memory utilization freeing up more space to increase the batch size. The throughput metric in the training phase has also increased from 273 samples per second (117 milliseconds for batch size 32) to 395 (81 milliseconds for batch size 32).
+In addition to increasing Tensor Core utilization, AMP has also lowered the GPU memory utilization freeing up more space to increase the batch size. The throughput metric in the training phase has also increased from 273 samples per second (117 milliseconds for batch size 32) to 395 samples per second (81 milliseconds for batch size 32).
 
 ![2_AMP_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/5b53abad-6d16-441a-b382-7fc5efb4a9f0)
 
