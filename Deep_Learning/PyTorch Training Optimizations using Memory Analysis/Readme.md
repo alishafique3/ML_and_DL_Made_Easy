@@ -31,6 +31,12 @@ The tutorial has used a classification model (based on the Mobilenet_V2 architec
 ![1_baseline_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3e1a7661-e364-4987-8b4a-1953b3081aa1)
 As we can see, the step time is 117 msec with the GPU utilization is 73.28%. The average memory used in each training step can be found in the "Memory View" window. The base model uses almost 2.5GB in each training step.
 
+GPU Utilization/ GPU busy time: It is the time during “all steps time” when there is at least one GPU kernel running on this GPU. The higher, the better. However, It can’t tell how many SMs(Stream Multiprocessors) are in use. For example, a kernel with a single thread running continuously will get 100% GPU utilization.
+
+Est. SM Efficiency: Estimated Stream Multiprocessor Efficiency. The "Estimated Stream Multiprocessor Efficiency" typically represents the ratio of the actual computational work being performed by the stream multiprocessors to the maximum possible work they could perform under ideal conditions. In other words, it measures how effectively the SMs are utilized during the execution of a parallel workload. A high SM efficiency indicates that the GPU is effectively utilizing its parallel processing resources. Monitoring and optimizing SM efficiency are essential for maximizing the performance and throughput of parallel computing tasks on GPUs.
+
+Est. Achieved Occupancy: In parallel computing, occupancy refers to the ratio of active warps (threads) to the maximum possible number of warps that can be resident on a streaming multiprocessor (SM) at a given time. provides insight into how effectively the GPU kernel is utilizing the available hardware resources. A high achieved occupancy indicates that a large portion of the GPU's processing resources is actively utilized, which can lead to better performance. Monitoring and optimizing achieved occupancy are important for maximizing the performance of GPU-accelerated applications. Techniques such as optimizing thread block size, memory access patterns, and kernel execution configuration can help improve achieved occupancy and overall performance on GPU devices.
+
 ## Optimization #1: Automatic Mixed Precision
 The GPU Kernel View displays the amount of time that the GPU kernels were active and can be a helpful resource for improving GPU utilization:
 ![1_baseline_kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/074249c0-cd1d-4002-8a9f-6a5522bcc151)
