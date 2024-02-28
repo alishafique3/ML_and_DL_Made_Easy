@@ -126,13 +126,13 @@ Caution: Shared memory used for multiple processing by CPU cores is 64MB by defa
 ```
 Unexpected bus error encountered. This might caused by insufficient shared memory (shm)
 ```
-It can be solved by allocating more shared memory while running the docker image. The following command is used to run the Docker image and allocation of the shared memory
+It can be solved by allocating more shared memory at the time of running the docker image. The following command is used to run the Docker image and allocation of the 2GB shared memory
 ```
 docker run --gpus=all --rm -it --net=host --shm-size=2gb nvcr.io/nvidia/pytorch:23.10-py3
 ```
 
 ## Optimization #5: Memory Pinning
-If we analyze the performance of the last optimization in the Overview Window, we can see that a significant amount of time is still spent on processing and loading the training data into the GPU. To tackle this concern, we will implement another PyTorch-recommended optimization aimed at streamlining the data input flow and utilizing memory pinning. Utilizing pinned memory can notably enhance the speed of data transfer from the host to the device, and importantly, enables asynchronous operations. This capability enables us to concurrently prepare the next training batch on the GPU while executing the training step on the current batch.
+If we analyze the performance of the last optimization in the Overview Window, we can see that a significant amount of time is still spent on processing and loading the training data into the GPU. To tackle this concern, we will implement another PyTorch-recommended optimization aimed at streamlining the data input flow and utilizing memory pinning. Utilizing pinned memory can notably enhance the speed of data transfer from the host to the device, and importantly, enables asynchronous operations. This capability enables us to concurrently prepare the next training batch on the GPU while executing the training step on the current batch. To learn more about memory pinning check this link [Lecture 21 - Pinned Memory and Streams](https://www.youtube.com/watch?v=aNchuoFCgSs&t=103s)
 
 This memory-pinning optimization requires changes to two lines of code. First, we set the pin_memory flag of the DataLoader to True.
 ```python
