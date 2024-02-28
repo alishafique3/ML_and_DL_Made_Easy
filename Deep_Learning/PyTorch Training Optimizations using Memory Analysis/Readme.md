@@ -29,7 +29,7 @@ The tutorial has used a classification model (based on the Mobilenet_V2 architec
 
 ![1_baseline_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3c871ec6-9aac-45c3-a306-7e43f5f65fe7)
 ![1_baseline_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3e1a7661-e364-4987-8b4a-1953b3081aa1)
-As we can see, the step time is 117 msec with the GPU utilization is 73.28%. The average memory used in each training step can be found in the "Memory View" window. The base model uses almost 2.5GB in each training step.
+As we can see, the step time is 117 msec with the GPU utilization is 73.28%. The average memory used in each training step can be found in the "Memory View" window. The base model uses almost 2.5GB in each training step. Some important terminologies regarding PyTorch GPU summary are explained below:
 
 GPU Utilization/ GPU busy time: It is the time during “all steps time” when there is at least one GPU kernel running on this GPU. The higher, the better. However, It can’t tell how many SMs(Stream Multiprocessors) are in use. For example, a kernel with a single thread running continuously will get 100% GPU utilization.
 
@@ -75,25 +75,23 @@ Caution: Lowering the precision of portions of your model could have a meaningfu
 
 
 ## Optimization #2: Increase Batch Size
-The chart shows that out of 16 GB of GPU memory, we are peaking at less than 1 GB of utilization. This is an extreme example of resource under-utilization that often (though not always) indicates an opportunity to boost performance. One way to control the memory utilization is to increase the batch size. In the image below we display the performance results when we increase the batch size to 512 (and the memory utilization to 11.3 GB).
+The previous optimization (Automatic mixed precision) has not reduced step time significantly. This technique has not only made GPU memory half but also reduced the GPU busy time from 73.28% to 64.6%. This GPU under-utilization situation allows us to increase the batch size. In the image below we display the performance results when we increase the batch size to 128.
 ```python
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True)
 ```
-Although the GPU utilization measure did not change much, our training speed has increased considerably, from 1200 samples per second (46 milliseconds for batch size 32) to 1584 samples per second (324 milliseconds for batch size 512).
+Although the GPU utilization value did not change much, the training speed has increased significantly, from 395 samples per second (81 milliseconds for batch size 32) to 551 samples per second (232 milliseconds for batch size 128).
 ![3_BatchSize_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/7a085e4a-e81e-4562-a976-2c1133675383)
 ![3_BatchSize_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/d9b6cdab-d991-4b59-8924-1271e7173242)
 
-Caution: Contrary to our previous optimizations, increasing the batch size could have an impact on the behavior of your training application. Different models exhibit different levels of sensitivity to a change in batch size. 
-
 ## Optimization #3: Reduce Host to Device Copy
-You probably noticed the big red eyesore representing the host-to-device data copy in the pie chart from our previous results. The most direct way of trying to address this kind of bottleneck is to see if we can reduce the amount of data in each batch. Notice that in the case of our image input, we convert the data type from an 8-bit unsigned integer to a 32-bit float and apply normalization before performing the data copy. In the code block below, we propose a change to the input data flow in which we delay the data type conversion and normalization until the data is on the GPU:
+Another optimization that can increase GPU utilization is to reduce host (CPU) operations and memory transfer from host to device. One way to address this kind of bottleneck is to reduce the amount of data and operations in each batch. This can be done by converting the data type from an 8-bit unsigned integer to a 32-bit float (due to normalization) after performing the data copy. In the code block below, data type conversion and normalization are performed once the data is on the GPU:
 ```python
 transform = T.Compose(
     [T.Resize(224),
      T.ToTensor()#,
      ]) #T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ```
-Train function will be updated as
+and the Train function will be updated as
 ```python
 def train(data):
     inputs, labels = data[0].to(device=device), data[1].to(device=device)
@@ -108,13 +106,13 @@ def train(data):
     loss.backward()
     optimizer.step()
 ```
-As a result of this change the amount of data being copied from the CPU to the GPU is reduced by 4x and the red eyesore virtually disappears:
+As a result of this change, the memory copy did not change but CPU execution and other time reduce significantly. It also increases the GPU Utilization:
 ![4_H2D_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3a7158de-859f-4915-bd6d-0e77f98d856a)
 
-We now stand at a new high of 97.51%(!!) GPU utilization and a training speed of 1670 samples per second! Let’s see what else we can do.
+This optimization leaves us with 631 samples per second (202 milliseconds for batch size 128).
 
 ## Optimization #4: Multi-process Data Loading
-Let’s start by applying multi process data loading as described in the tutorial. Being that the Amazon EC2 p3.2xlarge instance has 8 vCPUs, we set the number of DataLoader workers to 8 for maximum performance:
+Let’s start by applying multi-process data loading as described in the tutorial. Being that the Amazon EC2 p3.2xlarge instance has 8 vCPUs, we set the number of DataLoader workers to 8 for maximum performance:
 ```python
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True, num_workers=2)
 ```
