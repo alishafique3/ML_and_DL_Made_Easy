@@ -75,7 +75,7 @@ Caution: Lowering the precision of portions of your model could have a meaningfu
 
 
 ## Optimization #2: Increase Batch Size
-The previous optimization (Automatic mixed precision) has not reduced step time significantly. This technique has not only made GPU memory half but also reduced the GPU busy time from 73.28% to 64.6%. This GPU under-utilization situation allows us to increase the batch size. In the image below we display the performance results when we increase the batch size to 128.
+The previous optimization (Automatic mixed precision) has reduced step time significantly from 117 msec to 81 msec. This technique has not only made GPU memory almost half but also reduced the GPU busy time from 73.28% to 64.6%. It makes GPU under-utilized and allows us to increase the batch size. In the image below we display the performance results when we increase the batch size to 128.
 ```python
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True)
 ```
