@@ -76,11 +76,11 @@ In addition to increasing Tensor Core utilization, AMP has also lowered the GPU 
 
 
 ## Optimization #2: Increase Batch Size
-The previous optimization (Automatic mixed precision) has reduced step time significantly from 117 msec to 81 msec. This technique has not only made GPU memory almost half but also reduced the GPU busy time from 73.28% to 64.6%. It makes GPU under-utilized and allows us to increase the batch size. In the image below we display the performance results when we increase the batch size to 128.
+The previous optimization (Automatic mixed precision) has reduced step time significantly from 117 msec to 81 msec. This technique has also made GPU memory almost half from 2.5GB to 1.3 GB. It makes GPU under-utilized and allows us to increase the batch size. In the image below we display the performance results when we increase the batch size to 128.
 ```python
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True)
 ```
-Although the GPU utilization value did not change much, the training speed has increased significantly, from 395 samples per second (81 milliseconds for batch size 32) to 551 samples per second (232 milliseconds for batch size 128).
+As a result of this change, the training speed has increased significantly, from 395 samples per second (81 milliseconds for batch size 32) to 551 samples per second (232 milliseconds for batch size 128).
 ![3_BatchSize_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/7a085e4a-e81e-4562-a976-2c1133675383)
 ![3_BatchSize_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/d9b6cdab-d991-4b59-8924-1271e7173242)
 
@@ -107,7 +107,7 @@ def train(data):
     loss.backward()
     optimizer.step()
 ```
-As a result of this change, the memory copy did not change but CPU execution and other time reduce significantly. It also increases the GPU Utilization:
+As a result of this change, the memory copy did not change but CPU execution and other time factors reduce significantly. It has also increased the GPU Utilization:
 ![4_H2D_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3a7158de-859f-4915-bd6d-0e77f98d856a)
 
 This optimization leaves us with 631 samples per second (202 milliseconds for batch size 128).
