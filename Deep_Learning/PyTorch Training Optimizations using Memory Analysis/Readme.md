@@ -38,16 +38,19 @@ Est. SM Efficiency: Estimated Stream Multiprocessor Efficiency. The "Estimated S
 Est. Achieved Occupancy: In parallel computing, occupancy refers to the ratio of active warps (threads) to the maximum possible number of warps that can be resident on a streaming multiprocessor (SM) at a given time. provides insight into how effectively the GPU kernel is utilizing the available hardware resources. A high achieved occupancy indicates that a large portion of the GPU's processing resources is actively utilized, which can lead to better performance. Monitoring and optimizing achieved occupancy are important for maximizing the performance of GPU-accelerated applications. Techniques such as optimizing thread block size, memory access patterns, and kernel execution configuration can help improve achieved occupancy and overall performance on GPU devices.
 
 ## Optimization #1: Automatic Mixed Precision
-The GPU Kernel View displays the amount of time that the GPU kernels were active and can be a helpful resource for improving GPU utilization:
+An interesting observation in the GPU kernel view is the minimal utilization of the GPU Tensor Cores. These components, found in more recent GPU designs, serve dual functions. Firstly, they act as specialized units for performing matrix multiplication, which greatly enhances the performance of AI applications. Secondly, Tensor Cores deliver significant performance improvements over conventional GPU cores through their use of mixed-precision arithmetic operations.
 ![1_baseline_kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/074249c0-cd1d-4002-8a9f-6a5522bcc151)
 
-One of the most glaring details in this report is the lack of use of the GPU Tensor Cores. Available on relatively newer GPU architectures, Tensor Cores are dedicated processing units for matrix multiplication that can boost AI application performance significantly. Their lack of use may represent a major opportunity for optimization.
+In Automatic Mixed Precision (AMP) training, specific sections of the model are automatically converted to lower-precision 16-bit floats and executed on the GPU TensorCores. This approach delivers notable computational acceleration by performing operations in half-precision format while storing minimal data in single-precision to preserve essential information in critical parts of the network. With the introduction of Tensor Cores in the Volta and Turing architectures, significant speed enhancements have been achieved through mixed precision.
 
-Being that Tensor Cores are specifically designed for mixed-precision computing, one straight-forward way to increase their utilization is to modify our model to use Automatic Mixed Precision (AMP). In AMP mode portions of the model are automatically cast to lower-precision 16-bit floats and run on the GPU TensorCores.
+Implementing mixed precision training involves three key steps:
 
-Importantly, note that a full implementation of AMP may require gradient scaling which we do not include in our demonstration. Be sure to see the documentation on mixed precision training before adapting it.
+- Converting applicable parts of the model to utilize the float16 data type.
+- Retaining float32 master weights to accumulate weight updates per iteration.
+- Employing loss scaling to maintain small gradient values.
 
-The modification to the training step required to enable AMP is demonstrated in the code block below.
+
+The modification to the training step for AMP is shown in the code block below.
 
 ```python
 def train(data):
@@ -62,12 +65,10 @@ def train(data):
     loss.backward()
     optimizer.step()
 ```
-The impact on the Tensor Core utilization is displayed in the image below. Although it continues to indicate opportunity for further improvement, with just one line of code the utilization jumped from 0% to 26.3%.
+The impact on the Tensor Core utilization is displayed in the image below. With just a few lines of code, the utilization jumped from 0% to 19%.
 ![2_AMP_Kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/183527fb-ec76-4067-ba18-8487113cf68d)
 
-In addition to increasing Tensor Core utilization, using AMP lowers the GPU memory utilization freeing up more space to increase the batch size. Although the GPU utilization has slightly decreased, our primary throughput metric has further increased by nearly 50%, from 1670 samples per second to 2477. We are on a roll!
-
-Caution: Lowering the precision of portions of your model could have a meaningful effect on its convergence. As in the case of increasing the batch size (see above) the impact of using mixed precision will vary per model. In some cases, AMP will work with little to no effort. Other times you might need to work a bit harder to tune the autoscaler. Still other times you might need to set the precision types of different portions of the model explicitly (i.e., manual mixed precision).
+In addition to increasing Tensor Core utilization, AMP has also lowered the GPU memory utilization freeing up more space to increase the batch size. The throughput metric in the training phase has also increased from 273 samples per second to 395.
 
 ![2_AMP_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/5b53abad-6d16-441a-b382-7fc5efb4a9f0)
 
