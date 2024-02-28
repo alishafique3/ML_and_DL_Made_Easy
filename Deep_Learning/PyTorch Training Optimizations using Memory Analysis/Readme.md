@@ -143,7 +143,7 @@ The results of the memory pinning optimization are displayed below:
 Our GPU utilization now stands at a respectable 92.37% and our step time has further decreased. But we can still do better. Note that despite this optimization, the performance report continues to indicate that we are spending a lot of time copying the data into the GPU. We will come back to this in step 4 below.
 
 ## Result
-The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimization techniques is compared with the base model. GPU memory is in GB while Avg. step time is in microseconds. Percentage optimization value is the ratio of optimized samples per sec / base samples per sec.
+The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimization techniques is compared with the base model. GPU memory is in GB while Avg. step time is in microseconds. Samples per sec can be calculated by dividing the batch value by Avg. Step time. Percentage optimization value is the ratio of optimized samples per sec / base samples per sec.
 | Optimization Technique        | Batch Size           | GPU Memory (GB)  | Avg. Step Time (ms)  | Samples per sec  | Optimization (rel. to base)  | 
 :-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 | Base_Model      | 32 | 2.51 | 117.1      | 273.5 | 100% |
