@@ -2,7 +2,7 @@
 
 Training optimization techniques are critical in machine learning because they enhance efficiency, speed up convergence, ensure stability, improve generalization, and enable scalability. These techniques are essential for developing effective models that perform well on various tasks and datasets while making efficient use of computational resources.
 
-The focus of this tutorial will be on the optimization of the training stage on a single GPU using PyTorch framework. We will use PyTorch’s built-in performance analyzer, PyTorch Profiler, and the PyTorch Profiler TensorBoard plugin to analyze the performance of the training stage. Automatic mixed precision, increased batch size, reduced H2D copy, multiprocessing, and pinned memory techniques are used in this tutorial to improve training time and memory usage. 
+The focus of this tutorial will be on the optimization of the training stage on a single GPU using PyTorch framework. We will use PyTorch’s built-in performance analyzer, PyTorch Profiler, and the PyTorch Profiler TensorBoard plugin to analyze the performance of the training stage. The optimization techniques used in this tutorial are Automatic mixed precision, increased batch size, reduced H2D copy, multiprocessing, and pinned memory to improve training time and memory usage. 
 
 ## Usage:
 The code is built using the NVIDIA container image of Pytorch, release 23.10, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch). The code is built using the following libraries:
