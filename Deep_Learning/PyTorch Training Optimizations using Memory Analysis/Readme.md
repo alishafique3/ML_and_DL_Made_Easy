@@ -62,7 +62,7 @@ def train(data):
     loss.backward()
     optimizer.step()
 ```
-The impact to the Tensor Core utilization is displayed in the image below. Although it continues to indicate opportunity for further improvement, with just one line of code the utilization jumped from 0% to 26.3%.
+The impact on the Tensor Core utilization is displayed in the image below. Although it continues to indicate opportunity for further improvement, with just one line of code the utilization jumped from 0% to 26.3%.
 ![2_AMP_Kernel_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/183527fb-ec76-4067-ba18-8487113cf68d)
 
 In addition to increasing Tensor Core utilization, using AMP lowers the GPU memory utilization freeing up more space to increase the batch size. Although the GPU utilization has slightly decreased, our primary throughput metric has further increased by nearly 50%, from 1670 samples per second to 2477. We are on a roll!
@@ -143,7 +143,7 @@ The results of the memory pinning optimization are displayed below:
 Our GPU utilization now stands at a respectable 92.37% and our step time has further decreased. But we can still do better. Note that despite this optimization, the performance report continues to indicate that we are spending a lot of time copying the data into the GPU. We will come back to this in step 4 below.
 
 ## Result
-Android Device use for this project is Xiaomi Mi A2 with octacore processor and Adreno512 GPU. During benchmarking, 4 CPU threads are used. Runtime memory and model size are in MB while inference time is an average time in microseconds. 
+The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of difference optimization techniques is compared with the base model. GPU memory is in GB while Avg. step time is in microseconds. Percentage optimization value is the ratio of optimized samples per sec / base samples per sec.
 | Optimization Technique        | Batch Size           | GPU Memory (GB)  | Avg. Step Time (ms)  | Samples per sec  | Optimization (rel. to base)  | 
 :-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 | Base_Model      | 32 | 2.51 | 117.1      | 273.5 | 100% |
@@ -154,10 +154,9 @@ Android Device use for this project is Xiaomi Mi A2 with octacore processor and 
 | Memory Pinning     | 128 | 4.95 | 92.6      | 1381.6 | 505% |
 
 ## Conclusion
-In this project, different optimized models have been compared on android device. Dynamic quantization plays remarkably well among these optimized models. This project can be extended on different datasets, models and hardware to see the performance of optimization techniques.
+In this tutorial, different optimization techniques are used that improve the performance in the training stage 5 times. These techniques are useful for training large models such as Foundation models. With proper memory analysis and a few lines of code, significant results can be achieved in the training stage.
 
 ## References
-1.	Pyimagesearch Website: Fire and smoke detection with Keras and deep learning link: https://www.pyimagesearch.com/2019/11/18/fire-and-smoke-detection-with-keras-and-deep-learning/
-2.	Youtube Website: tinyML Talks: A Practical guide to neural network quantization link: https://www.youtube.com/watch?v=KASuxB3XoYQ 
+1.	PyTorch Model Performance Analysis and Optimization link: https://towardsdatascience.com/pytorch-model-performance-analysis-and-optimization-10c3c5822869
 
 
