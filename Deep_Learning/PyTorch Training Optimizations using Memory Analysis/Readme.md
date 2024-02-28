@@ -112,16 +112,24 @@ As a result of this change, the memory copy did not change but CPU execution and
 This optimization leaves us with 631 samples per second (202 milliseconds for batch size 128).
 
 ## Optimization #4: Multi-process Data Loading
-Let’s start by applying multi-process data loading as described in the tutorial. Being that the Amazon EC2 p3.2xlarge instance has 8 vCPUs, we set the number of DataLoader workers to 8 for maximum performance:
+A multiprocessing data loader is a component used in machine learning frameworks like PyTorch to load and process data in parallel during model training or evaluation. It utilizes multiple processor cores or threads to speed up data loading, improve efficiency, and support tasks like data augmentation. A multiprocessing data loader typically operates on the CPU. It leverages multiple CPU cores or threads to load and preprocess data in parallel, improving efficiency and speeding up the data-loading process.
+To enable this optimization following change is made:
 ```python
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True, num_workers=2)
 ```
 The results of this optimization are displayed below:
 ![5_multiprocessor_overview_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/23d0a466-7512-40db-ae01-fa4efa97407f)
 
-The change to a single line of code increased the GPU utilization by more than 200% (31.65% from to 72.81%), and more than halved our training step time, (from 80 milliseconds down to 37).
+The change to a single line of code has reduced the training step time from 202.6 msec to 145.8 msec. 
 
-This is where the optimization process in the tutorial comes to end. Although our GPU utilization (72.81%) is quite a bit higher than the results in the tutorial (40.46%), I have no doubt that, like us, you find these results to still be quite unsatisfactory.
+Caution: Shared memory used for multiple processing by CPU cores is 64MB by default in docker. It is not sufficient and you will get an error such as
+```
+Unexpected bus error encountered. This might caused by insufficient shared memory (shm)
+```
+It can be solved by allocating more shared memory while running the docker image. The following command is used to run the Docker image and allocation of the shared memory
+```
+docker run --gpus=all --rm -it --net=host --shm-size=2gb nvcr.io/nvidia/pytorch:23.10-py3
+```
 
 ## Optimization #5: Memory Pinning
 If we analyze the performance of the last optimization in the Overview Window, we can see that a significant amount of time is still spent on processing and loading the training data into the GPU. To tackle this concern, we will implement another PyTorch-recommended optimization aimed at streamlining the data input flow and utilizing memory pinning. Utilizing pinned memory can notably enhance the speed of data transfer from the host to the device, and importantly, enables asynchronous operations. This capability enables us to concurrently prepare the next training batch on the GPU while executing the training step on the current batch.
