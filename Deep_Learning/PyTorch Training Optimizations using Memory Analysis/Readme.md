@@ -124,9 +124,7 @@ The change to a single line of code increased the GPU utilization by more than 2
 This is where the optimization process in the tutorial comes to end. Although our GPU utilization (72.81%) is quite a bit higher than the results in the tutorial (40.46%), I have no doubt that, like us, you find these results to still be quite unsatisfactory.
 
 ## Optimization #5: Memory Pinning
-If we analyze the Trace view of our last experiment, we can see that a significant amount of time (10 out of 37 milliseconds) is still spent on loading the training data into the GPU.
-
-To address this, we will apply another PyTorch-recommended optimization for streamlining the data input flow, and memory pinning. Using pinned memory can increase the speed of host-to-GPU data copy and, more importantly, allows us to make them asynchronous. This means that we can prepare the next training batch in the GPU in parallel to running the training step on the current batch. It is important to note that although asynchronous execution will generally increase performance, it can also reduce the accuracy of time measurements. For the purposes of our blog post, we will continue to use the measurements reported by PyTorch Profiler. See here for instructions on how to attain precise measurements. For additional details on memory pinning and its side effects, please see the PyTorch documentation.
+If we analyze the performance of the last optimization in the Overview Window, we can see that a significant amount of time is still spent on processing and loading the training data into the GPU. To tackle this concern, we will implement another PyTorch-recommended optimization aimed at streamlining the data input flow and utilizing memory pinning. Utilizing pinned memory can notably enhance the speed of data transfer from the host to the device, and importantly, enables asynchronous operations. This capability enables us to concurrently prepare the next training batch on the GPU while executing the training step on the current batch.
 
 This memory-pinning optimization requires changes to two lines of code. First, we set the pin_memory flag of the DataLoader to True.
 ```python
@@ -140,7 +138,7 @@ inputs, labels = data[0].to(device=device, non_blocking=True), \
 The results of the memory pinning optimization are displayed below:
 ![6_pin_memory_overview_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/88e110f0-0c87-4265-8e47-10d7a0b38259)
 
-Our GPU utilization now stands at a respectable 92.37% and our step time has further decreased. But we can still do better. Note that despite this optimization, the performance report continues to indicate that we are spending a lot of time copying the data into the GPU. We will come back to this in step 4 below.
+Our GPU utilization has increased from 79.54% to 86.22% and our step time has further decreased to 92.6 msec.
 
 ## Result
 The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimization techniques is compared with the base model. GPU memory is in GB while Avg. step time is in microseconds. Samples per sec can be calculated by dividing the batch value by Avg. Step time. Percentage optimization value is the ratio of optimized samples per sec / base samples per sec.
