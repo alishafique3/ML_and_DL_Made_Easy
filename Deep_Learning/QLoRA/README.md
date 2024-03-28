@@ -40,3 +40,25 @@ The tutorial has used a encoder-decoder model (google-t5/t5-3b from huggingface)
 To achieve our goal, namely to fine-tune a model on a single GPU, we will need to quantize it. This means taking its weights, which are in a float32 format, and reducing them to a smaller format, here 4 bits. Then, for training, we will use QLORA, which is a quantized version of LoRA (see here). With QLoRA, we freeze the quantize weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the base model.
 ![lora](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/4d490c99-86ca-4c09-86ce-bdf10a49ebc5)
 The advantage is that the number of weights trained is much lower than the number of weights in the base model, while still maintaining a good level of accuracy. Moreover the Quantize model takes much less space on the RAM than the original one (google-t5/t5 3B model pass from ~11.4GB to just 4.29GB!) , meaning that you can run it on a powerful local machine or on a free google Colab instance.
+
+For the model selection, you can opt for models that have up to about 20 billion parameters (see here) beyond that, you will have to get a better GPU. I have chosen as the base model the 7B model from MistralAI, which shows very good performance compared to other models of its size, and even manages to outperform larger language models like Llama 2 13B. (more details on the paper they release here).
+
+```python
+from transformers import AutoTokenizer
+
+checkpoint = "t5-3b"
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+```
+Next, we create the Quantization parameters using the most optimal values: by loading the model in 4 bits, using the NF4 format (4-bit NormalFloat (NF4), a new data type that is optimal for normally distributed weight), and by using double quantization which allows for further memory savings. However, for computations, these can only be performed in float16 or bfloat16 depending on the GPU, so they will be converted during calculation and then reconverted into the compressed format.
+```python
+#Quantization as defined https://huggingface.co/docs/optimum/concept_guides/quantization will help us reduce the size of the model for it to fit on a single GPU 
+#Quantization configuration
+compute_dtype = getattr(torch, "float16")
+print(compute_dtype)
+bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=compute_dtype,
+        bnb_4bit_use_double_quant=True,
+)
+```
