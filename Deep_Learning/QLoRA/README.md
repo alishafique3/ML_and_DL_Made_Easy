@@ -108,3 +108,44 @@ T5ForConditionalGeneration(
       )
 ...
 ```
+We also notice the names of the different elements of the models (MistralDecoderLayer, MistralRotaryEmbedding, etc.). Next, we define the learning parameters of LoRA. We set the rank r, which is the rank each matrix should have. The higher this rank, the greater the number of weights in the lower-rank matrices. We set it to 16 for this example, but you can increase it if the performance is not satisfactory, or decrease it to reduce the number of trainable parameters. The dropout rate corresponds to the proportion of weights that should be set to 0 during training to make the network more robust and to prevent overfitting.
+
+The target_modules corresponds to the names of modules that appear when we printed the model (q_proj, k_proj, v_proj, etc.). If you are using a different model, replace this line with the list of modules you want to target. The more modules you target, the more parameter you will have to train.
+```python
+peft_config = LoraConfig(
+        lora_alpha=16,
+        lora_dropout=0.05,
+        r=32,
+        bias="none",
+        task_type="SEQ_2_SEQ_LM",
+        target_modules= ['v', 'o'],
+        modules_to_save=["lm_head"],
+)
+```
+Finally, we define the training arguments.
+```python
+training_args = Seq2SeqTrainingArguments(
+    output_dir="my_awesome_billsum_model",
+    evaluation_strategy="epoch",
+    optim="paged_adamw_8bit", #used with QLoRA
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
+    weight_decay=0.01,
+    save_total_limit=3,
+    learning_rate=2e-5,
+    num_train_epochs=4,
+    predict_with_generate=True,
+    #fp16=True,
+    #push_to_hub=True,
+)
+
+trainer = Seq2SeqTrainer(
+    model=model_q,
+    args=training_args,
+    train_dataset=tokenized_billsum["train"],
+    eval_dataset=tokenized_billsum["test"],
+    tokenizer=tokenizer,
+    data_collator=data_collator,
+    compute_metrics=compute_metrics,
+)
+```
