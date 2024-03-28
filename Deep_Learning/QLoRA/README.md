@@ -22,16 +22,13 @@ Where:
 
 ### Install following libraries inside the docker
 ```console
-! pip install bitsandbytes transformers peft accelerate 
-! pip install datasets trl ninja packaging
-! pip install evaluate rouge_score
+pip install bitsandbytes transformers peft accelerate 
+pip install datasets trl ninja packaging
+pip install evaluate rouge_score
 ```
 
 ## Baseline Model
-Pytorch example "PyTorch Profiler With TensorBoard" is used as base code which is available [Link](https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html) accessed on February 2, 2024.
+Pytorch summarization task example is used as base code which is available [Link](https://huggingface.co/docs/transformers/en/tasks/summarization) accessed on march 28, 2024.
 
-The tutorial has used a classification model (based on the Mobilenet_V2 architecture) that is trained on the popular CIFAR10 dataset. PyTorch Profiler and the PyTorch TensorBoard plugin are used to identify a bottleneck in the training step. 
+The tutorial has used a encoder-decoder model (google-t5/t5-3b from huggingface) that is trained on the popular billsum dataset. Bitsandbytes and the PEFT libraries are used to implement QLoRA adapter in T5-3b model duing the training phase. 
 
-![1_baseline_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3c871ec6-9aac-45c3-a306-7e43f5f65fe7)
-![1_baseline_memory_u](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/3e1a7661-e364-4987-8b4a-1953b3081aa1)
-As we can see, the step time is 117 msec with the GPU utilization is 73.28%. The average memory used in each training step can be found in the "Memory View" window. The base model uses almost 2.5GB in each training step. Some important terminologies regarding PyTorch GPU summary are explained below:
