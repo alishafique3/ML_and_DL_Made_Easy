@@ -200,11 +200,11 @@ tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 ## Result
 The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimization techniques is compared with the base model. GPU memory is in GB while Avg. step time is in microseconds. Samples per sec can be calculated by dividing the batch value by Avg. Step time. Percentage optimization value is the ratio of optimized samples per sec / base samples per sec.
-| Model        | Memory (GB)           | Total parameters (B)  | Trainable parameters (B)  | Trainable%  |
-:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
-| Base_Model      | 11.4 | 2.9 | 2.9      | 100% |
-| Quantized Model      | 4.29 | 2.9 | 2.9      | 100% |
-| QloRA Model      | 4.29 | 2.9 | 0.056      | 1.94% |
+| Model        | Memory (GB)           |Memory Reduction           | Total parameters (B)  | Trainable parameters (B)  | Trainable%  |
+:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+| Base_Model      | 11.4 | 1 | 2.9 | 2.9      | 100% |
+| Quantized Model      | 4.29 | 2.65 | 2.9 | 2.9      | 100% |
+| QloRA Model      | 4.29 | 2.65 | 2.9 | 0.056      | 1.94% |
 
 
 ## Conclusion
