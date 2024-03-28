@@ -176,3 +176,24 @@ You can adjust the batch size depending on the size of the model and the GPU at 
 For the optimizer, we use the Paged Optimizer provided by QLoRA. Paged optimizer is a feature provided by Nvidia to move paged memory of optimizer states between the CPU and GPU. It is mainly used here to manage memory spikes and avoid out-of-memory errors.
 Set a low learning rate because we want to stay close to the original model.
 Here we define the number of epoch to 1 but to obtain a pretty good result you should go for 3/4 epoch on your data.
+```python
+trainer.train()
+```
+
+Once the training is complete, you can conduct a few tests to see if the response meets your expectations and consider retraining if the result is not satisfactory.
+
+```python
+from transformers import AutoTokenizer
+
+text = "summarize: The Inflation Reduction Act lowers prescription drug costs, health care costs, and energy costs. It's the most aggressive action on tackling the climate crisis in American history, which will lift up American workers and create good-paying, union jobs across the country. It'll lower the deficit and ask the ultra-wealthy and corporations to pay their fair share. And no one making under $400,000 per year will pay a penny more in taxes."
+
+tokenizer = AutoTokenizer.from_pretrained("stevhliu/my_awesome_billsum_model")
+inputs = tokenizer(text, return_tensors="pt").input_ids
+
+from transformers import AutoModelForSeq2SeqLM
+
+model = model_q#AutoModelForSeq2SeqLM.from_pretrained("stevhliu/my_awesome_billsum_model")
+outputs = model.generate(inputs, max_new_tokens=100, do_sample=False)
+
+tokenizer.decode(outputs[0], skip_special_tokens=True)
+```
