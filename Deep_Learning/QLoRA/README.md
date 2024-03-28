@@ -149,3 +149,7 @@ trainer = Seq2SeqTrainer(
     compute_metrics=compute_metrics,
 )
 ```
+You can adjust the batch size depending on the size of the model and the GPU at your disposal (the resource tab on Colab will provide this information). Your goal here is to define batch sizes that maximize GPU usage without exceeding it.
+For the optimizer, we use the Paged Optimizer provided by QLoRA. Paged optimizer is a feature provided by Nvidia to move paged memory of optimizer states between the CPU and GPU. It is mainly used here to manage memory spikes and avoid out-of-memory errors.
+Set a low learning rate because we want to stay close to the original model.
+Here we define the number of epoch to 1 but to obtain a pretty good result you should go for 3/4 epoch on your data.
