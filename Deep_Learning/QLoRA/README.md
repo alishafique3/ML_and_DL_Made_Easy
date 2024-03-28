@@ -22,13 +22,20 @@ Where:
 
 ### Install following libraries inside the docker
 ```console
-pip install bitsandbytes transformers peft accelerate 
-pip install datasets trl ninja packaging
-pip install evaluate rouge_score
+pip install bitsandbytes==0.43.0
+pip install transformers==4.39.1
+pip install peft==0.10.0
+pip install accelerate==0.28.0 
+pip install datasets==2.18.0
+pip install trl==0.8.1
+pip install ninja==1.11.1.1
+pip install packaging
+pip install evaluate==0.4.1
+pip install rouge-score==0.1.2
 ```
 
 ## Baseline Model
-Pytorch summarization task example is used as base code which is available [Link](https://huggingface.co/docs/transformers/en/tasks/summarization) accessed on march 28, 2024.
+Pytorch summarization task example is used as base code which is available at [Link](https://huggingface.co/docs/transformers/en/tasks/summarization), accessed on march 28, 2024.
 
 The tutorial has used a encoder-decoder model (google-t5/t5-3b from huggingface) that is trained on the popular billsum dataset. Bitsandbytes and the PEFT libraries are used to implement QLoRA adapter in T5-3b model duing the training phase. 
 
