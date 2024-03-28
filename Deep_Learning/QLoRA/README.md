@@ -122,6 +122,29 @@ peft_config = LoraConfig(
         modules_to_save=["lm_head"],
 )
 ```
+Add PEFT adapter to the 4bit model.
+```python
+model_q.add_adapter(peft_config, adapter_name="adapter_4")
+model_q.set_adapter("adapter_4")
+```
+
+you can check the number of trainable parameters and the proportion they represent compared to the total number of parameters.
+```python
+def print_trainable_parameters(model):
+    """
+    Prints the number of trainable parameters in the model.
+    """
+    trainable_params = 0
+    all_param = model.num_parameters()
+    for _, param in model.named_parameters():
+        if param.requires_grad:
+            trainable_params += param.numel()
+    print(
+        f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param}"
+    )
+print_trainable_parameters(model_q)
+```
+
 Finally, we define the training arguments.
 ```python
 training_args = Seq2SeqTrainingArguments(
