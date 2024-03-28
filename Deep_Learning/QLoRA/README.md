@@ -34,7 +34,7 @@ pip install evaluate==0.4.1
 pip install rouge-score==0.1.2
 ```
 
-## Baseline Model
+## Baseline Model T5-3b
 Pytorch summarization task example is used as base code which is available at [Link](https://huggingface.co/docs/transformers/en/tasks/summarization), accessed on march 28, 2024.
 
 The tutorial has used a encoder-decoder model (google-t5/t5-3b from huggingface) that is trained on the popular billsum dataset. Bitsandbytes and the PEFT libraries are used to implement QLoRA adapter in T5-3b model duing the training phase. 
