@@ -66,9 +66,9 @@ bnb_config = BitsAndBytesConfig(
 )
 ```
 - ```load_in_4bit=True``` to quantize the model to 4-bits when you load it
-- bnb_4bit_quant_type="nf4" to use a special 4-bit data type for weights initialized from a normal distribution
-- bnb_4bit_use_double_quant=True to use a nested quantization scheme to quantize the already quantized weights
-- bnb_4bit_compute_dtype=torch.bfloat16 to use bfloat16 for faster computation
+- ```bnb_4bit_quant_type="nf4"``` to use a special 4-bit data type for weights initialized from a normal distribution
+- ```bnb_4bit_use_double_quant=True``` to use a nested quantization scheme to quantize the already quantized weights
+- ```bnb_4bit_compute_dtype=torch.bfloat16``` to use bfloat16 for faster computation
   
 Next, we load the model and quantize it on the fly using the previous configuration. If you have a GPU that is compatible with flash attention, set it to True. We force the device map to load the model on our GPU.
 ```python
