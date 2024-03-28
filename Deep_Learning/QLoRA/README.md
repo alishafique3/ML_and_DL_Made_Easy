@@ -197,3 +197,19 @@ outputs = model.generate(inputs, max_new_tokens=100, do_sample=False)
 
 tokenizer.decode(outputs[0], skip_special_tokens=True)
 ```
+
+## Result
+The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimization techniques is compared with the base model. GPU memory is in GB while Avg. step time is in microseconds. Samples per sec can be calculated by dividing the batch value by Avg. Step time. Percentage optimization value is the ratio of optimized samples per sec / base samples per sec.
+| Model        | Memory (GB)           | Total parameters (B)  | Trainable parameters (B)  | Trainable%  |
+:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
+| Base_Model      | 11.4 | 2.9 | 2.9      | 100% |
+| Quantized Model      | 4.29 | 2.9 | 2.9      | 100% |
+| QloRA Model      | 4.29 | 2.9 | 0.056      | 1.94% |
+
+
+## Conclusion
+In this tutorial, different optimization techniques are used that improve the performance in the training stage 5 times. These techniques are useful for training large models such as Foundation models. With proper memory analysis and a few lines of code, significant results can be achieved in the training stage.
+
+## References
+1.	PyTorch Model Performance Analysis and Optimization link: https://towardsdatascience.com/pytorch-model-performance-analysis-and-optimization-10c3c5822869
+2.	PyTorch Profiler With TensorBoard link: https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html
