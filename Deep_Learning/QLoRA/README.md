@@ -62,3 +62,49 @@ bnb_config = BitsAndBytesConfig(
         bnb_4bit_use_double_quant=True,
 )
 ```
+Next, we load the model and quantize it on the fly using the previous configuration. If you have a GPU that is compatible with flash attention, set it to True. We force the device map to load the model on our GPU.
+```python
+from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
+
+model_q = AutoModelForSeq2SeqLM.from_pretrained(checkpoint,quantization_config=bnb_config, device_map={"": 0}) #device_map="auto" will cause a problem in the training
+
+model_q.get_memory_footprint()
+```
+We can then verify that our model has been successfully loaded and that the tensor format is indeed Linear4bit, and that the model is ready to be trained.
+```python
+print(model_q)
+```
+
+```python
+T5ForConditionalGeneration(
+  (shared): Embedding(32128, 1024)
+  (encoder): T5Stack(
+    (embed_tokens): Embedding(32128, 1024)
+    (block): ModuleList(
+      (0): T5Block(
+        (layer): ModuleList(
+          (0): T5LayerSelfAttention(
+            (SelfAttention): T5Attention(
+              (q): Linear4bit(in_features=1024, out_features=4096, bias=False)
+              (k): Linear4bit(in_features=1024, out_features=4096, bias=False)
+              (v): Linear4bit(in_features=1024, out_features=4096, bias=False)
+              (o): Linear4bit(in_features=4096, out_features=1024, bias=False)
+              (relative_attention_bias): Embedding(32, 32)
+            )
+            (layer_norm): FusedRMSNorm(torch.Size([1024]), eps=1e-06, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (1): T5LayerFF(
+            (DenseReluDense): T5DenseActDense(
+              (wi): Linear4bit(in_features=1024, out_features=16384, bias=False)
+              (wo): Linear(in_features=16384, out_features=1024, bias=False)
+              (dropout): Dropout(p=0.1, inplace=False)
+              (act): ReLU()
+            )
+            (layer_norm): FusedRMSNorm(torch.Size([1024]), eps=1e-06, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+...
+```
