@@ -44,7 +44,7 @@ In order to fine-tune a model on single GPU with reduced memory footprint, quant
 ![lora](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/4d490c99-86ca-4c09-86ce-bdf10a49ebc5)
 The benefit lies in the significantly reduced number of trained weights compared to those in the base model, while maintaining a high level of accuracy. Furthermore, the quantized model occupies much less RAM space than the original one (the google-t5/t5 3B model memory footprint reduces from approximately 11.4GB to just 4.29GB), allowing for development on a powerful local machine or a free Google Colab instance.
 
-For the model selection, you can opt for models that have up to about 20 billion parameters (see here) beyond that, you will have to get a better GPU. I have chosen as the base model the 7B model from MistralAI, which shows very good performance compared to other models of its size, and even manages to outperform larger language models like Llama 2 13B. (more details on the paper they release here).
+For the model selection, T5 model is used with three billion parameters. T5 is an encoder-decoder model and performs efficiently for Seq2Seq2 tasks. Google Colab free instance is used.
 
 ```python
 from transformers import AutoTokenizer
@@ -52,7 +52,8 @@ from transformers import AutoTokenizer
 checkpoint = "t5-3b"
 tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 ```
-Next, we create the Quantization parameters using the most optimal values: by loading the model in 4 bits, using the NF4 format (4-bit NormalFloat (NF4), a new data type that is optimal for normally distributed weight), and by using double quantization which allows for further memory savings. However, for computations, these can only be performed in float16 or bfloat16 depending on the GPU, so they will be converted during calculation and then reconverted into the compressed format.
+Next, we generate the quantization parameters by initializing the model with 4 bits, employing the NF4 format (4-bit NormalFloat - NF4), a new data type ideal for normally distributed weights, and implementing double quantization to achieve additional memory conservation. However, during computations, these operations can only be executed in float16 or bfloat16, contingent upon the GPU's capabilities. As a result, they will be converted during calculation and later reverted to the compressed format.
+
 ```python
 #Quantization as defined https://huggingface.co/docs/optimum/concept_guides/quantization will help us reduce the size of the model for it to fit on a single GPU 
 #Quantization configuration
@@ -65,12 +66,13 @@ bnb_config = BitsAndBytesConfig(
         bnb_4bit_use_double_quant=True,
 )
 ```
+
 - ```load_in_4bit=True``` to quantize the model to 4-bits when you load it
 - ```bnb_4bit_quant_type="nf4"``` to use a special 4-bit data type for weights initialized from a normal distribution
 - ```bnb_4bit_use_double_quant=True``` to use a nested quantization scheme to quantize the already quantized weights
-- ```bnb_4bit_compute_dtype=torch.bfloat16``` to use bfloat16 for faster computation
+- ```bnb_4bit_compute_dtype=torch.float16``` to use float16 for faster computation
   
-Next, we load the model and quantize it on the fly using the previous configuration. If you have a GPU that is compatible with flash attention, set it to True. We force the device map to load the model on our GPU.
+Next, we load the full precision model and quantized model to calculate the memory reduction ratio. If you have a GPU that supports flash attention, set this flag to True.
 ```python
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 
@@ -78,7 +80,20 @@ model_q = AutoModelForSeq2SeqLM.from_pretrained(checkpoint,quantization_config=b
 
 model_q.get_memory_footprint()
 ```
-We can then verify that our model has been successfully loaded and that the tensor format is indeed Linear4bit, and that the model is ready to be trained.
+```
+11406393344
+```
+```python
+from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
+
+model_q = AutoModelForSeq2SeqLM.from_pretrained(checkpoint,quantization_config=bnb_config, device_map={"": 0}) #device_map="auto" will cause a problem in the training
+
+model_q.get_memory_footprint()
+```
+```
+4293910528
+```
+We can also verify the quantized layers by printing the ```model_q```. The tensor format is Linear4bit, and memory footprint has significantly reduced.
 ```python
 print(model_q)
 ```
