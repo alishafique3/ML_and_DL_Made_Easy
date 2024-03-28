@@ -40,9 +40,9 @@ Pytorch summarization task example is used as base code which is available at [L
 Encoder decoder based model is used in this tutorial (google-t5/t5-3b from huggingface) which is trained on the popular billsum dataset. Bitsandbytes and the PEFT libraries are used to implement QLoRA adapter in T5-3b model duing the training phase. BitsAndBytes package will be used to apply quantiation to T5-3b model which will significantly reduce the memory footprintof the model. PEFT library will be utilized to apply LoRA adapter on top of the frozen quantized model. This configuration will help us to train T5-3b model on a single GPU.
 
 ## Fine-tuning with QLoRA (Quantized Low-Rank Adaptation)
-To fine-tune a model on a single GPU, we will need to quantize it. This means taking its weights, which are in a float32 format, and reducing them to a smaller format, here 4 bits. Then, for training, we will use QLORA, which is a quantized version of LoRA (see here). With QLoRA, we freeze the quantize weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the base model.
+In order to fine-tune a model on single GPU with reduced memory footprint, quantization is necessary. This involves converting the model's weights from a float32 format to a smaller one, typically 4 or 8 bits. Subsequently, during training, we employ QLoRA which is a quantized variant of LoRA. With QLoRA, we freeze the quantized weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the base model.
 ![lora](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/4d490c99-86ca-4c09-86ce-bdf10a49ebc5)
-The advantage is that the number of weights trained is much lower than the number of weights in the base model, while still maintaining a good level of accuracy. Moreover the quantize model takes much less space on the RAM than the original one (google-t5/t5 3B model pass from ~11.4GB to just 4.29GB!) , meaning that you can run it on a powerful local machine or on a free google Colab instance.
+The benefit lies in the significantly reduced number of trained weights compared to those in the base model, while maintaining a high level of accuracy. Furthermore, the quantized model occupies much less RAM space than the original one (the google-t5/t5 3B model memory footprint reduces from approximately 11.4GB to just 4.29GB), allowing for development on a powerful local machine or a free Google Colab instance.
 
 For the model selection, you can opt for models that have up to about 20 billion parameters (see here) beyond that, you will have to get a better GPU. I have chosen as the base model the 7B model from MistralAI, which shows very good performance compared to other models of its size, and even manages to outperform larger language models like Llama 2 13B. (more details on the paper they release here).
 
@@ -65,6 +65,11 @@ bnb_config = BitsAndBytesConfig(
         bnb_4bit_use_double_quant=True,
 )
 ```
+- load_in_4bit=True to quantize the model to 4-bits when you load it
+- bnb_4bit_quant_type="nf4" to use a special 4-bit data type for weights initialized from a normal distribution
+- bnb_4bit_use_double_quant=True to use a nested quantization scheme to quantize the already quantized weights
+- bnb_4bit_compute_dtype=torch.bfloat16 to use bfloat16 for faster computation
+- 
 Next, we load the model and quantize it on the fly using the previous configuration. If you have a GPU that is compatible with flash attention, set it to True. We force the device map to load the model on our GPU.
 ```python
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
