@@ -211,5 +211,5 @@ The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The 
 In this tutorial, different optimization techniques are used that improve the performance in the training stage 5 times. These techniques are useful for training large models such as Foundation models. With proper memory analysis and a few lines of code, significant results can be achieved in the training stage.
 
 ## References
-1.	PyTorch Model Performance Analysis and Optimization link: https://towardsdatascience.com/pytorch-model-performance-analysis-and-optimization-10c3c5822869
+1.	[https://towardsdatascience.com/pytorch-model-performance-analysis-and-optimization-10c3c5822869](https://medium.com/@hugo_fernandez/fine-tune-and-deploy-an-llm-on-google-colab-notebook-with-qlora-and-vertexai-58a838a63845)
 2.	PyTorch Profiler With TensorBoard link: https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html
