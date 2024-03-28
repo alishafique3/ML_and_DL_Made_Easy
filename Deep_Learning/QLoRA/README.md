@@ -21,7 +21,7 @@ Where:
 - xx.xx is the container version that is 23.10
 
 ### Install following libraries inside the docker
-```console
+```python
 pip install bitsandbytes==0.43.0
 pip install transformers==4.39.1
 pip install peft==0.10.0
