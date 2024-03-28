@@ -33,16 +33,10 @@ pip install packaging
 pip install evaluate==0.4.1
 pip install rouge-score==0.1.2
 ```
-
 ## Baseline Model T5-3b
 Pytorch summarization task example is used as base code which is available at [Link](https://huggingface.co/docs/transformers/en/tasks/summarization), accessed on march 28, 2024.
-
 The tutorial has used a encoder-decoder model (google-t5/t5-3b from huggingface) that is trained on the popular billsum dataset. Bitsandbytes and the PEFT libraries are used to implement QLoRA adapter in T5-3b model duing the training phase. 
-
 ## Fine-tuning with QLoRA (Quantized Low-Rank Adaptation)
 To achieve our goal, namely to fine-tune a model on a single GPU, we will need to quantize it. This means taking its weights, which are in a float32 format, and reducing them to a smaller format, here 4 bits. Then, for training, we will use QLORA, which is a quantized version of LoRA (see here). With QLoRA, we freeze the quantize weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the base model.
-
 ![lora](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/4d490c99-86ca-4c09-86ce-bdf10a49ebc5)
-
-
 The advantage is that the number of weights trained is much lower than the number of weights in the base model, while still maintaining a good level of accuracy. Moreover the Quantize model takes much less space on the RAM than the original one (google-t5/t5 3B model pass from ~11.4GB to just 4.29GB!) , meaning that you can run it on a powerful local machine or on a free google Colab instance.
