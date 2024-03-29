@@ -289,8 +289,8 @@ tokenizer.decode(outputs[0], skip_special_tokens=True)
 ```
 
 ## Result
-The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimization techniques is compared with the base model. GPU memory is in GB while Avg. step time is in microseconds. Samples per sec can be calculated by dividing the batch value by Avg. Step time. Percentage optimization value is the ratio of optimized samples per sec / base samples per sec.
-| Model        | Memory (GB)           |Memory Reduction           | Total parameters (B)  | Trainable parameters (B)  | Trainable%  |
+The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimized models is compared with the base model. Memory reduction factor can be calculated by dividing the base model memory by optimized model memory.
+| Model        | Memory (GB)           |Memory Reduction           | Total parameters (Billion)  | Trainable parameters (Billion)  | Trainable%  |
 :-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 | Base_Model      | 11.4 | 1 | 2.9 | 2.9      | 100% |
 | Quantized Model      | 4.29 | 2.65 | 2.9 | 2.9      | 100% |
@@ -298,7 +298,7 @@ The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The 
 
 
 ## Conclusion
-In this tutorial, different optimization techniques are used that improve the performance in the training stage 5 times. These techniques are useful for training large models such as Foundation models. With proper memory analysis and a few lines of code, significant results can be achieved in the training stage.
+In this tutorial, we have utilized the QLoRA technique using BitsAndBytes and PEFT libraries to reduce the memory usage during the training phase. Quantization has led to a 2.65 times reduction in memory footprint, while LoRA has frozen the model and permitted 1.94% of parameters to be trained on the fine-tuning dataset. This setup allows us to train large models like T5 with three billion parameters on a single GPU. Such an approach empowers smaller organizations and individual developers to tailor LLMs for specific tasks.
 
 ## References
 1.	Fine-tune and deploy an LLM on Google Colab Notebook with QLoRA and VertexAI Link: https://medium.com/@hugo_fernandez/fine-tune-and-deploy-an-llm-on-google-colab-notebook-with-qlora-and-vertexai-58a838a63845
