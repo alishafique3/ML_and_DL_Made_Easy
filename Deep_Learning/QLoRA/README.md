@@ -36,7 +36,7 @@ pip install evaluate==0.4.1
 pip install rouge-score==0.1.2
 ```
 ## Baseline Model T5-3b
-Pytorch summarization task example is used as base code which is available at [Link](https://huggingface.co/docs/transformers/en/tasks/summarization), accessed on march 28, 2024.
+Pytorch summarization task example is used as base code which is available at [Link](https://huggingface.co/docs/transformers/en/tasks/summarization), accessed on march 28, 2024. [This](https://medium.com/@hugo_fernandez/fine-tune-and-deploy-an-llm-on-google-colab-notebook-with-qlora-and-vertexai-58a838a63845) medium blog is also useful to learn how to implement QLoRA in the model.
 Encoder decoder based model is used in this tutorial (google-t5/t5-3b from huggingface) which is trained on the popular billsum dataset. Bitsandbytes and the PEFT libraries are used to implement QLoRA adapter in T5-3b model duing the training phase. BitsAndBytes package will be used to apply quantiation to T5-3b model which will significantly reduce the memory footprintof the model. PEFT library will be utilized to apply LoRA adapter on top of the frozen quantized model. This configuration will help us to train T5-3b model on a single GPU.
 
 ## Fine-tuning with QLoRA (Quantized Low-Rank Adaptation)
