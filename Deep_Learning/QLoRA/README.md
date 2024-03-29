@@ -235,7 +235,7 @@ print_trainable_parameters(model_q)
 ```
 ```trainable params: 56492032 || all params: 2908090368 || trainable%: 1.9425817237877527```
 
-Finally, we define the training arguments.
+Finally, we define the training arguments and trainer configurations.
 ```python
 training_args = Seq2SeqTrainingArguments(
     output_dir="my_awesome_billsum_model",
@@ -262,10 +262,9 @@ trainer = Seq2SeqTrainer(
     compute_metrics=compute_metrics,
 )
 ```
-You can adjust the batch size depending on the size of the model and the GPU at your disposal (the resource tab on Colab will provide this information). Your goal here is to define batch sizes that maximize GPU usage without exceeding it.
-For the optimizer, we use the Paged Optimizer provided by QLoRA. Paged optimizer is a feature provided by Nvidia to move paged memory of optimizer states between the CPU and GPU. It is mainly used here to manage memory spikes and avoid out-of-memory errors.
-Set a low learning rate because we want to stay close to the original model.
-Here we define the number of epoch to 1 but to obtain a pretty good result you should go for 3/4 epoch on your data.
+You have the flexibility to modify the batch size based on the model's size and the GPU's memory capacity. The objective is to set batch sizes that fully utilize the GPU's capabilities by avoiding cuda Out of memory issue.
+As for the optimizer, we employ the Paged Optimizer offered by QLoRA. This optimizer utilizes a feature provided by Nvidia to transfer paged memory of optimizer states between the CPU and GPU. Its primary purpose in this context is to handle memory spikes and prevent out-of-memory errors.
+
 ```python
 trainer.train()
 ```
