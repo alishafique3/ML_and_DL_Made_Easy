@@ -131,9 +131,9 @@ T5ForConditionalGeneration(
       )
 ...
 ```
-We also notice the names of the different elements of the models (MistralDecoderLayer, MistralRotaryEmbedding, etc.). Next, we define the learning parameters of LoRA. We set the rank r, which is the rank each matrix should have. The higher this rank, the greater the number of weights in the lower-rank matrices. We set it to 16 for this example, but you can increase it if the performance is not satisfactory, or decrease it to reduce the number of trainable parameters. The dropout rate corresponds to the proportion of weights that should be set to 0 during training to make the network more robust and to prevent overfitting.
+We also obseerve the names of the different layers/modules of the models (SelfAttention, DenseReluDense, etc.). we define the learning parameters of LoRA such as rank r, which is the rank the matrix. The higher this rank, the greater the number of weights in the lower-rank matrices. In our case, we set it to 32, but you can increase it if the performance is not satisfactory, or decrease it to reduce the number of trainable parameters. The dropout rate corresponds to the proportion of weights that should be set to 0 during training phase to make the network more robust and to prevent overfitting.
 
-The target_modules corresponds to the names of modules that appear when we printed the model (q_proj, k_proj, v_proj, etc.). If you are using a different model, replace this line with the list of modules you want to target. The more modules you target, the more parameter you will have to train.
+The target_modules corresponds to the names of modules that will be connected with low-rank matrices. If you are using a different model, replace this line with the list of modules you want to target. The more modules you target, the more parameter you will have to train. modules_to_save defines which modules of the model will be trained(unfreezed) after connecting low-rank adapters.
 ```python
 peft_config = LoraConfig(
         lora_alpha=16,
@@ -152,12 +152,71 @@ peft_config = LoraConfig(
 - ```target_modules``` it specifies which layers/modules of the model will be adapted during fine-tuning.
 - ```modules_to_save``` defines which modules of the model will be saved after adaptation.
   
-Add PEFT adapter to the 4bit model.
+Add PEFT low-rank matrices adapter to the 4bit model.
 ```python
 model_q.add_adapter(peft_config, adapter_name="adapter_4")
 model_q.set_adapter("adapter_4")
 ```
-
+you can verify those layers ('v','o') connected with low-rank adapters using ```print``` command.
+```python
+T5ForConditionalGeneration(
+  (shared): Embedding(32128, 1024)
+  (encoder): T5Stack(
+    (embed_tokens): Embedding(32128, 1024)
+    (block): ModuleList(
+      (0): T5Block(
+        (layer): ModuleList(
+          (0): T5LayerSelfAttention(
+            (SelfAttention): T5Attention(
+              (q): Linear4bit(in_features=1024, out_features=4096, bias=False)
+              (k): Linear4bit(in_features=1024, out_features=4096, bias=False)
+              (v): lora.Linear4bit(
+                (base_layer): Linear4bit(in_features=1024, out_features=4096, bias=False)
+                (lora_dropout): ModuleDict(
+                  (adapter_4): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (adapter_4): Linear(in_features=1024, out_features=32, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (adapter_4): Linear(in_features=32, out_features=4096, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+              )
+              (o): lora.Linear4bit(
+                (base_layer): Linear4bit(in_features=4096, out_features=1024, bias=False)
+                (lora_dropout): ModuleDict(
+                  (adapter_4): Dropout(p=0.05, inplace=False)
+                )
+                (lora_A): ModuleDict(
+                  (adapter_4): Linear(in_features=4096, out_features=32, bias=False)
+                )
+                (lora_B): ModuleDict(
+                  (adapter_4): Linear(in_features=32, out_features=1024, bias=False)
+                )
+                (lora_embedding_A): ParameterDict()
+                (lora_embedding_B): ParameterDict()
+              )
+              (relative_attention_bias): Embedding(32, 32)
+            )
+            (layer_norm): FusedRMSNorm(torch.Size([1024]), eps=1e-06, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (1): T5LayerFF(
+            (DenseReluDense): T5DenseActDense(
+              (wi): Linear4bit(in_features=1024, out_features=16384, bias=False)
+              (wo): Linear(in_features=16384, out_features=1024, bias=False)
+              (dropout): Dropout(p=0.1, inplace=False)
+              (act): ReLU()
+            )
+            (layer_norm): FusedRMSNorm(torch.Size([1024]), eps=1e-06, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+...
+```
 you can check the number of trainable parameters and the proportion they represent compared to the total number of parameters.
 ```python
 def print_trainable_parameters(model):
