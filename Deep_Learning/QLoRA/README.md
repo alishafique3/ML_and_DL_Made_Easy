@@ -145,6 +145,13 @@ peft_config = LoraConfig(
         modules_to_save=["lm_head"],
 )
 ```
+- ```lora_alpha```
+- ```lora_dropout```
+- ```r```
+- ```task_type```
+- ```target_modules``` it specifies which layers/modules of the model will be adapted during fine-tuning.
+- ```modules_to_save``` defines which modules of the model will be saved after adaptation.
+  
 Add PEFT adapter to the 4bit model.
 ```python
 model_q.add_adapter(peft_config, adapter_name="adapter_4")
