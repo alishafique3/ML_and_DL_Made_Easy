@@ -41,7 +41,8 @@ Encoder decoder based model is used in this tutorial (google-t5/t5-3b from huggi
 
 ## Fine-tuning with QLoRA (Quantized Low-Rank Adaptation)
 In order to fine-tune a model on single GPU with reduced memory footprint, quantization is necessary. This involves converting the model's weights from a float32 format to a smaller one, typically 4 or 8 bits. Subsequently, during training, we employ QLoRA which is a quantized variant of LoRA. With QLoRA, we freeze the quantized weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the base model.
-![lora](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/4d490c99-86ca-4c09-86ce-bdf10a49ebc5)
+![qlora (1)](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/93322679-e6bd-4e0e-8761-43a1dcb1da51)
+
 The benefit lies in the significantly reduced number of trained weights compared to those in the base model, while maintaining a high level of accuracy. Furthermore, the quantized model occupies much less RAM space than the original one (the google-t5/t5 3B model memory footprint reduces from approximately 11.4GB to just 4.29GB), allowing for development on a powerful local machine or a free Google Colab instance.
 
 For the model selection, T5 model is used with three billion parameters. T5 is an encoder-decoder model and performs efficiently for Seq2Seq2 tasks. Google Colab free instance is used.
