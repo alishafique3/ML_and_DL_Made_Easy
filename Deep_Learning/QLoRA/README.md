@@ -22,7 +22,7 @@ nvidia-docker run -it --rm -v nvcr.io/nvidia/pytorch:xx.xx-py3
 Where:
 - xx.xx is the container version that is 23.10
 
-### Install following libraries inside the docker
+### Install the following libraries inside the docker
 ```python
 pip install bitsandbytes==0.43.0
 pip install transformers==4.39.1
@@ -37,10 +37,10 @@ pip install rouge-score==0.1.2
 ```
 ## Baseline Model T5-3b
 Pytorch summarization task example is used as base code which is available at [Link](https://huggingface.co/docs/transformers/en/tasks/summarization), accessed on march 28, 2024. [This](https://medium.com/@hugo_fernandez/fine-tune-and-deploy-an-llm-on-google-colab-notebook-with-qlora-and-vertexai-58a838a63845) medium blog is also helpful for this tutorial.
-Encoder decoder based model is used in this tutorial (google-t5/t5-3b from huggingface) which is finetuned on the popular billsum dataset. BitsAndBytes package will be used to apply quantization to T5-3b model which will significantly reduce the memory footprintof the model. PEFT library will be utilized to apply LoRA adapter inside the layers of frozen quantized model.
+Encoder decoder based model is used in this tutorial (google-t5/t5-3b from huggingface) which is finetuned on the popular billsum dataset. BitsAndBytes package will be used to apply quantization to the T5-3b model which will significantly reduce the memory footprintof the model. PEFT library will be utilized to apply LoRA adapter inside the layers of the frozen quantized model.
 
 ## Fine-tuning with QLoRA (Quantized Low-Rank Adaptation)
-To fine-tune a model on single GPU with reduced memory footprint, quantization is recommended. This technique involves converting the model's weights from a float32 format to a smaller one, typically 4 or 8 bits. Subsequently, during training. For QLoRA, we freeze the quantized weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the base model.
+To fine-tune a model on a single GPU with a reduced memory footprint, quantization is recommended. This technique involves converting the model's weights from a float32 format to a smaller one, typically 4 or 8 bits. Subsequently, during training. For QLoRA, we freeze the quantized weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the base model.
 ![qlora (1)](https://github.com/alishafique3/ML_and_DL_Made_Easy/assets/17300597/93322679-e6bd-4e0e-8761-43a1dcb1da51)
 
 The benefit lies in the significantly reduced number of trained weights compared to those in the base model, while maintaining the accuracy. Furthermore, the quantized model occupies much less RAM space than the original one (the google-t5/t5 3B model memory footprint reduces from approximately 11.4GB to just 4.29GB), allowing for development on a powerful local machine or a free Google Colab instance.
@@ -132,9 +132,9 @@ T5ForConditionalGeneration(
       )
 ...
 ```
-We also obseerve the names of the different layers/modules of the models (SelfAttention, DenseReluDense, etc.). we define the learning parameters of LoRA such as rank r, which is the rank the adapter matrices. The higher this rank, the greater the number of weights in the lower-rank matrices. In our case, we set it to 32, but you can increase it if the performance is not desirable, or decrease it to reduce the number of trainable weights and memory footprint of optimizer parameters associated with each weight. The dropout rate corresponds to the proportion of weights that should be set to 0 during training phase to make the network more robust and to prevent overfitting.
+We also observe the names of the different layers/modules of the models (SelfAttention, DenseReluDense, etc.). we define the learning parameters of LoRA such as rank r, which is the rank of the adapter matrices. The higher this rank, the greater the number of weights in the lower-rank matrices. In our case, we set it to 32, but you can increase it if the performance is not desirable, or decrease it to reduce the number of trainable weights and memory footprint of optimizer parameters associated with each weight. The dropout rate corresponds to the proportion of weights that should be set to 0 during the training phase to make the network more robust and to prevent overfitting.
 
-The target_modules corresponds to the names of modules that will be connected with low-rank matrices. If you are using a different model, replace this line with the list of modules you want to target. The more modules you target, the more parameter you will have to train. modules_to_save defines which modules of the model will be trained(unfreezed) after connecting low-rank adapters.
+The target_modules corresponds to the names of modules that will be connected with low-rank matrices. If you are using a different model, replace this line with the list of modules you want to target. The more modules you target, the more parameters you will have to train. modules_to_save defines which modules of the model will be trained(unfreezed) after connecting low-rank adapters.
 ```python
 peft_config = LoraConfig(
         lora_alpha=16,
@@ -150,10 +150,10 @@ peft_config = LoraConfig(
 - ```lora_dropout``` This argument sets the dropout rate used in LoRA layers to prevent overfitting during training.
 - ```r``` It determines the rank of the low-rank approximation used in LoRA. A higher value of r implies a higher rank and potentially more expressive power, but also more parameters.
 - ```task_type``` Indicates the type of task the model is fine-tuned for. In this case, it's set to "SEQ_2_SEQ_LM", suggesting sequence-to-sequence language modeling.
-- ```target_modules``` it specifies which layers/modules of the model will be adapted during fine-tuning.
+- ```target_modules```specifies which layers/modules of the model will be adapted during fine-tuning.
 - ```modules_to_save``` defines which modules of the model will be saved after adaptation.
   
-Add PEFT low-rank matrices adapter to the 4bit model.
+Add PEFT low-rank matrices adapter to the 4-bit model.
 ```python
 model_q.add_adapter(peft_config, adapter_name="adapter_4")
 model_q.set_adapter("adapter_4")
@@ -263,7 +263,7 @@ trainer = Seq2SeqTrainer(
     compute_metrics=compute_metrics,
 )
 ```
-You have the flexibility to modify the batch size based on the model's size and the GPU's memory capacity. The objective is to set batch sizes that fully utilize the GPU's capabilities by avoiding cuda Out of memory issue.
+You have the flexibility to modify the batch size based on the model's size and the GPU's memory capacity. The objective is to set batch sizes that fully utilize the GPU's capabilities by avoiding cuda Out of memory issues.
 As for the optimizer, we employ the Paged Optimizer offered by QLoRA. This optimizer utilizes a feature provided by Nvidia to transfer paged memory of optimizer states between the CPU and GPU. Its primary purpose in this context is to handle memory spikes and prevent out-of-memory errors.
 
 ```python
@@ -298,7 +298,7 @@ The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The 
 
 
 ## Conclusion
-In this tutorial, we have utilized the QLoRA technique using BitsAndBytes and PEFT libraries to reduce the memory usage during the training phase. Quantization has led to a 2.65 times reduction in memory footprint, while LoRA has frozen the model and permitted 1.94% of parameters to be trained on the fine-tuning dataset. This setup allows us to train large models like T5 with three billion parameters on a single GPU. Such an approach empowers smaller organizations and individual developers to tailor LLMs for specific tasks.
+In this tutorial, we have utilized the QLoRA technique using BitsAndBytes and PEFT libraries to reduce memory usage during the training phase. Quantization has led to a 2.65 times reduction in memory footprint, while LoRA has frozen the model and permitted 1.94% of parameters to be trained on the fine-tuning dataset. This setup allows us to train large models like T5 with three billion parameters on a single GPU. Such an approach empowers smaller organizations and individual developers to tailor LLMs for specific tasks.
 
 ## References
 1.	Fine-tune and deploy an LLM on Google Colab Notebook with QLoRA and VertexAI Link: https://medium.com/@hugo_fernandez/fine-tune-and-deploy-an-llm-on-google-colab-notebook-with-qlora-and-vertexai-58a838a63845
