@@ -52,7 +52,7 @@ from transformers import AutoTokenizer
 checkpoint = "t5-3b"
 tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 ```
-Next, we generate the quantization parameters by initializing the model with 4 bits, employing the NF4 format (4-bit NormalFloat - NF4), a new data type ideal for normally distributed weights, and implementing double quantization to achieve additional memory conservation. However, during computations, these operations can only be executed in float16 or bfloat16, contingent upon the GPU's capabilities. As a result, they will be converted during calculation and later reverted to the compressed format.
+Next, we generate the quantization parameters by initializing the model with 4 bits, employing the NF4 format (4-bit Normalized Float - NF4), a new data type ideal for normally distributed weights, and implementing double quantization to achieve additional memory conservation. However, during computations, these operations can only be executed in float16 or bfloat16, contingent upon the GPU's capabilities. As a result, they will be converted during calculation and later reverted to the compressed format.
 
 ```python
 #Quantization as defined https://huggingface.co/docs/optimum/concept_guides/quantization will help us reduce the size of the model for it to fit on a single GPU 
@@ -248,7 +248,7 @@ training_args = Seq2SeqTrainingArguments(
     learning_rate=2e-5,
     num_train_epochs=4,
     predict_with_generate=True,
-    #fp16=True,
+    fp16=True,
     #push_to_hub=True,
 )
 
