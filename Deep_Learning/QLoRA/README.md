@@ -289,7 +289,7 @@ tokenizer.decode(outputs[0], skip_special_tokens=True)
 ```
 
 ## Result
-The following results are collected on Quadro RTX 4000 GPU with 8GB memory. The performance of various optimized models is compared with the base model. Memory reduction factor can be calculated by dividing the base model memory by optimized model memory.
+The following results are collected on Tesla T4 GPU with 16GB memory. The performance of various optimized models is compared with the base model. Memory reduction factor can be calculated by dividing the base model memory by optimized model memory.
 | Model        | Memory (GB)           |Memory Reduction           | Total parameters (Billion)  | Trainable parameters (Billion)  | Trainable%  |
 :-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 | Base_Model      | 11.4 | 1 | 2.9 | 2.9      | 100% |
