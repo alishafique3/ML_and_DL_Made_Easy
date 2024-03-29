@@ -145,10 +145,10 @@ peft_config = LoraConfig(
         modules_to_save=["lm_head"],
 )
 ```
-- ```lora_alpha```
-- ```lora_dropout```
-- ```r```
-- ```task_type```
+- ```lora_alpha``` It specifies the value of the alpha parameter for LoRA, controlling the strength of low-rank approximation.
+- ```lora_dropout``` This argument sets the dropout rate used in LoRA layers to prevent overfitting during training.
+- ```r``` It determines the rank of the low-rank approximation used in LoRA. A higher value of r implies a higher rank and potentially more expressive power, but also more parameters.
+- ```task_type``` Indicates the type of task the model is fine-tuned for. In this case, it's set to "SEQ_2_SEQ_LM", suggesting sequence-to-sequence language modeling.
 - ```target_modules``` it specifies which layers/modules of the model will be adapted during fine-tuning.
 - ```modules_to_save``` defines which modules of the model will be saved after adaptation.
   
