@@ -233,6 +233,7 @@ def print_trainable_parameters(model):
     )
 print_trainable_parameters(model_q)
 ```
+```trainable params: 56492032 || all params: 2908090368 || trainable%: 1.9425817237877527```
 
 Finally, we define the training arguments.
 ```python
