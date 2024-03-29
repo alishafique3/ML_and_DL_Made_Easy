@@ -131,7 +131,7 @@ T5ForConditionalGeneration(
       )
 ...
 ```
-We also obseerve the names of the different layers/modules of the models (SelfAttention, DenseReluDense, etc.). we define the learning parameters of LoRA such as rank r, which is the rank the matrix. The higher this rank, the greater the number of weights in the lower-rank matrices. In our case, we set it to 32, but you can increase it if the performance is not satisfactory, or decrease it to reduce the number of trainable parameters. The dropout rate corresponds to the proportion of weights that should be set to 0 during training phase to make the network more robust and to prevent overfitting.
+We also obseerve the names of the different layers/modules of the models (SelfAttention, DenseReluDense, etc.). we define the learning parameters of LoRA such as rank r, which is the rank the adapter matrices. The higher this rank, the greater the number of weights in the lower-rank matrices. In our case, we set it to 32, but you can increase it if the performance is not desirable, or decrease it to reduce the number of trainable weights and memory footprint of optimizer parameters associated with each weight. The dropout rate corresponds to the proportion of weights that should be set to 0 during training phase to make the network more robust and to prevent overfitting.
 
 The target_modules corresponds to the names of modules that will be connected with low-rank matrices. If you are using a different model, replace this line with the list of modules you want to target. The more modules you target, the more parameter you will have to train. modules_to_save defines which modules of the model will be trained(unfreezed) after connecting low-rank adapters.
 ```python
