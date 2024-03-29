@@ -98,7 +98,7 @@ We can also verify the quantized layers by printing the ```model_q```. The tenso
 print(model_q)
 ```
 
-```python
+```
 T5ForConditionalGeneration(
   (shared): Embedding(32128, 1024)
   (encoder): T5Stack(
@@ -158,7 +158,7 @@ model_q.add_adapter(peft_config, adapter_name="adapter_4")
 model_q.set_adapter("adapter_4")
 ```
 you can verify those layers ('v','o') connected with low-rank adapters using ```print``` command.
-```python
+```
 T5ForConditionalGeneration(
   (shared): Embedding(32128, 1024)
   (encoder): T5Stack(
