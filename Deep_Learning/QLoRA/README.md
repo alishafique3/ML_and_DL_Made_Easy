@@ -2,7 +2,7 @@
 
 Large Language Models (LLMs) have achieved a significant advancement in the field of natural language processing. Models such as Google’s Gemini and OpenAI’s GPT-4 have demonstrated human-like performance across a wide array of tasks involving text, images, and video. However, the training process for the LLMs demands extensive computing resources, limiting their development to a few tech giants and research groups. To mitigate this challenge, Quantized LoRA (Low-Rank Adaptation) provides an efficient method for fine-tuning the LLMs. This approach enables smaller organizations and individual developers to customize LLMs for specific tasks. 
 
-QLoRA optimizes the memory usage of the models by learning few quantized parameters. This process enhances the training speed and scalability while retaining adaptation flexibility. Initially, we load the model and apply quantization to reduce the memory footprint. Subsequently, we fine-tune the LoRA low-rank matrices (adapters) in the layers of the frozen quantized model. This configuration enables us to train the T5 model with three billion parameters on a single GPU.
+QLoRA optimizes the memory usage of the models by learning a few quantized parameters. This process enhances the training speed and scalability while retaining adaptation flexibility. Initially, we load the model and apply quantization to reduce the memory footprint. Subsequently, we fine-tune the LoRA low-rank matrices (adapters) in the layers of the frozen quantized model. This configuration enables us to train the T5 model with three billion parameters on a single GPU.
 
 ## Usage:
 The code is built using the NVIDIA container image of Pytorch, release 23.10, which is available on [NGC](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch). The code is built using the following libraries:
@@ -37,7 +37,7 @@ pip install rouge-score==0.1.2
 ```
 ## Baseline Model T5-3b
 Pytorch summarization task example is used as base code which is available at [Link](https://huggingface.co/docs/transformers/en/tasks/summarization), accessed on march 28, 2024. [This](https://medium.com/@hugo_fernandez/fine-tune-and-deploy-an-llm-on-google-colab-notebook-with-qlora-and-vertexai-58a838a63845) medium blog is also helpful for this tutorial.
-Encoder decoder based model is used in this tutorial (google-t5/t5-3b from huggingface) which is finetuned on the popular billsum dataset. BitsAndBytes package is used to apply quantization to the model which will significantly reduce the memory footprintof the model. PEFT library is utilized to apply LoRA adapters inside the layers of the frozen quantized model.
+Encoder decoder based model is used in this tutorial (google-t5/t5-3b from huggingface) which is finetuned on the popular billsum dataset. BitsAndBytes package is used to apply quantization to the model which will significantly reduce the memory footprint of the model. PEFT library is utilized to apply LoRA adapters inside the layers of the frozen quantized model.
 
 ## Fine-tuning with QLoRA (Quantized Low-Rank Adaptation)
 In QLoRA, quantization is applied to reduce the memory footprint of the model. This technique involves converting the model's weights from a float32 format to a smaller one, typically 4 or 8 bits. Next, we freeze the quantized weights of the base model and perform backpropagation only on the weights of a lower-rank matrix that overlays the quantized base model.
@@ -46,7 +46,7 @@ In QLoRA, quantization is applied to reduce the memory footprint of the model. T
 
 The benefit lies in the significantly reduced number of trained weights compared to those in the base model, while maintaining the accuracy. Furthermore, the quantized model occupies much less RAM space than the original one (the google-t5/t5 3B model memory footprint reduces from approximately 11.4GB to just 4.29GB), allowing for development on a powerful local machine or a free Google Colab instance.
 
-In this tutorial, T5 model is used with three billion parameters. T5 is an encoder-decoder model and performs efficiently for Seq2Seq tasks.
+In this tutorial, the T5 model is used with three billion parameters. T5 is an encoder-decoder model and performs efficiently for Seq2Seq tasks.
 
 ```python
 from transformers import AutoTokenizer
@@ -74,7 +74,7 @@ bnb_config = BitsAndBytesConfig(
 - ```bnb_4bit_use_double_quant=True``` to use a nested quantization scheme to quantize the already quantized weights
 - ```bnb_4bit_compute_dtype=torch.float16``` to use float16 for faster computation
   
-Next, we load the full precision model to compae with quantized model and to calculate the memory reduction ratio.
+Next, we load the full precision model to compare with the quantized model and to calculate the memory reduction ratio.
 ```python
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer
 
@@ -95,7 +95,7 @@ model_q.get_memory_footprint()
 ```
 4293910528
 ```
-We can also verify the quantized layers by printing the ```model_q```. The tensor format is Linear4bit, and memory footprint has significantly reduced.
+We also verify the quantized layers by printing the ```model_q```. The tensor format is Linear4bit, and the memory footprint has significantly reduced.
 ```python
 print(model_q)
 ```
@@ -264,7 +264,7 @@ trainer = Seq2SeqTrainer(
     compute_metrics=compute_metrics,
 )
 ```
-You have the flexibility to modify the batch size based on the model's size and the GPU's memory capacity. The objective is to set batch sizes that fully utilize the GPU's capabilities by avoiding cuda out of memory issue.
+You have the flexibility to modify the batch size based on the model's size and the GPU's memory capacity. The objective is to set batch sizes that fully utilize the GPU's capabilities by avoiding CUDA out-of-memory issues.
 As for the optimizer, we employ the Paged Optimizer offered by QLoRA. This optimizer utilizes a feature provided by Nvidia to transfer paged memory of optimizer states between the CPU and GPU. Its primary purpose in this context is to handle memory spikes and prevent out-of-memory errors.
 
 ```python
@@ -290,7 +290,7 @@ tokenizer.decode(outputs[0], skip_special_tokens=True)
 ```
 
 ## Result
-The following results are collected on Tesla T4 GPU with 16GB memory. The performance of various optimized models is compared with the base model. Memory reduction factor is also calculated by dividing the base model memory by optimized model memory.
+The following results are collected on a Tesla T4 GPU with 16 GB memory. The performance of various optimized models is compared with the base model. Memory reduction factor is also calculated by dividing the base model memory by optimized model memory.
 | Model        | Memory (GB)           |Memory Reduction           | Total parameters (Billion)  | Trainable parameters (Billion)  | Trainable%  |
 :-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 | Base_Model      | 11.4 | 1 | 2.9 | 2.9      | 100% |
@@ -299,8 +299,8 @@ The following results are collected on Tesla T4 GPU with 16GB memory. The perfor
 
 
 ## Conclusion
-In this tutorial, we utilized the QLoRA technique using BitsAndBytes and PEFT libraries to reduce memory usage during the training phase. Quantization led to a 2.65 times reduction in memory footprint, while LoRA froze the model and permitted 1.94% of parameters to be trained on the fine-tuning dataset. This setup allowed us to train large models like T5 with three billion parameters on a single GPU with 16GB memory. Such approach will empower smaller organizations and individual developers to tailor LLMs for specific tasks.
+In this tutorial, we utilized the QLoRA technique using BitsAndBytes and PEFT libraries to reduce memory usage during the training phase. Quantization led to a 2.65 times reduction in memory footprint, while LoRA froze the model and permitted 1.94% of parameters to be trained on the fine-tuning dataset. This setup allowed us to train large models like T5 with three billion parameters on a single GPU with 16GB memory. Such an approach will empower smaller organizations and individual developers to tailor LLMs for specific tasks.
 
 ## References
 1.	Fine-tune and deploy an LLM on Google Colab Notebook with QLoRA and VertexAI Link: https://medium.com/@hugo_fernandez/fine-tune-and-deploy-an-llm-on-google-colab-notebook-with-qlora-and-vertexai-58a838a63845
-2.	Huggingface summarizaton task: https://huggingface.co/docs/transformers/en/tasks/summarization
+2.	Huggingface summarization task: https://huggingface.co/docs/transformers/en/tasks/summarization
